@@ -1,0 +1,13 @@
+@extends('layouts.app')
+@section('title', 'Portfolio Agency - Creative Digital Solutions')
+@section('content')
+    @include('sections.hero')
+    @include('sections.about')
+    @include('sections.services')
+    @include('sections.team')
+    @include('sections.portfolio')
+    @include('sections.skills')
+    @include('sections.testimonials')
+    @include('sections.blog')
+    @include('sections.contact')
+@endsection
