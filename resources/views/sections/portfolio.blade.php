@@ -1,13 +1,13 @@
 <section id="portfolio" class="py-24 relative">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
-            <span class="text-primary-400 font-semibold text-sm tracking-wider uppercase">Our Work</span>
+            <span class="text-primary-400 font-semibold text-sm uppercase tracking-normal">Our Work</span>
             <h2 class="text-4xl md:text-5xl font-bold mt-3 mb-4">Featured <span class="text-gradient">Projects</span></h2>
-            <p class="text-gray-400 max-w-2xl mx-auto">Explore our latest work and see how we bring ideas to life.</p>
+            <p class="text-gray-400 max-w-2xl mx-auto">Explore how Logicore turns ideas into practical digital products.</p>
         </div>
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             @forelse($projects as $project)
-            <a href="{{ route('projects.show', $project->slug) }}" class="group glass rounded-2xl overflow-hidden hover:-translate-y-2 transition-all duration-500">
+            <a href="{{ route('projects.show', $project->slug) }}" class="group glass rounded-lg overflow-hidden hover:-translate-y-2 transition-all duration-500">
                 <div class="h-48 overflow-hidden">
                     @if($project->cover_image)
                     <img src="{{ asset('storage/'.$project->cover_image) }}" alt="{{ $project->title }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
@@ -37,7 +37,7 @@
         </div>
         @if(count($projects ?? []) > 0)
         <div class="text-center mt-12">
-            <a href="{{ route('projects.index') }}" class="px-8 py-3 glass text-white font-semibold rounded-2xl hover:bg-white/15 transition-all inline-flex items-center gap-2">
+            <a href="{{ route('projects.index') }}" class="px-8 py-3 glass text-white font-semibold rounded-lg hover:bg-white/15 transition-all inline-flex items-center gap-2">
                 View All Projects <i class="fas fa-arrow-right"></i>
             </a>
         </div>

@@ -1,13 +1,11 @@
 <section id="testimonials" class="py-24 relative">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
-            <span class="text-primary-400 font-semibold text-sm tracking-wider uppercase">Testimonials</span>
+            <span class="text-primary-400 font-semibold text-sm uppercase tracking-normal">Testimonials</span>
             <h2 class="text-4xl md:text-5xl font-bold mt-3 mb-4">What Clients <span class="text-gradient">Say</span></h2>
         </div>
         <div x-data="{ active: 0, testimonials: {{ json_encode($testimonials->count() ? $testimonials->toArray() : [
-            ['client_name'=>'John Smith','client_position'=>'CEO','client_company'=>'TechCorp','content'=>'Outstanding work! They delivered beyond our expectations with incredible attention to detail.','rating'=>5],
-            ['client_name'=>'Emily Davis','client_position'=>'CTO','client_company'=>'StartupXYZ','content'=>'Professional team that truly understands modern web development. Highly recommended!','rating'=>5],
-            ['client_name'=>'Michael Brown','client_position'=>'Founder','client_company'=>'InnovateCo','content'=>'The best agency we have ever worked with. Quality, speed, and communication were top-notch.','rating'=>5],
+            ['client_name'=>'Client Name','client_position'=>'Founder','client_company'=>'','content'=>'Logicore combines technical quality, speed, and clear communication to deliver solutions that feel reliable from day one.','rating'=>5],
         ]) }} }" x-init="setInterval(() => active = (active + 1) % testimonials.length, 5000)" class="relative max-w-3xl mx-auto">
             <template x-for="(t, index) in testimonials" :key="index">
                 <div x-show="active === index"
@@ -17,13 +15,13 @@
                      x-transition:leave="transition ease-in duration-300"
                      x-transition:leave-start="opacity-100 scale-100"
                      x-transition:leave-end="opacity-0 scale-95"
-                     class="glass rounded-2xl p-8 md:p-12 text-center">
+                     class="glass rounded-lg p-8 md:p-12 text-center">
                     <div class="flex justify-center mb-4">
                         <template x-for="i in (t.rating || 5)" :key="i">
                             <i class="fas fa-star text-yellow-400 text-lg mx-0.5"></i>
                         </template>
                     </div>
-                    <p class="text-gray-300 text-lg leading-relaxed mb-6 italic" x-text="'&quot;' + t.content + '&quot;'"></p>
+                    <p class="text-gray-300 text-lg leading-relaxed mb-6 italic" x-text="t.content"></p>
                     <div class="flex items-center justify-center gap-3">
                         <div class="w-12 h-12 gradient-primary rounded-full flex items-center justify-center text-white font-bold" x-text="t.client_name ? t.client_name.charAt(0) : 'C'"></div>
                         <div class="text-left">

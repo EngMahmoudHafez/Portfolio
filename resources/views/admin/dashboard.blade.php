@@ -31,7 +31,7 @@
     </div>
     <div class="glass rounded-2xl p-6 hover:bg-white/10 transition-all group">
         <div class="flex items-center justify-between mb-4">
-            <div class="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center group-hover:scale-110 transition"><i class="fas fa-blog text-purple-400 text-xl"></i></div>
+            <div class="w-12 h-12 bg-accent-500/20 rounded-xl flex items-center justify-center group-hover:scale-110 transition"><i class="fas fa-blog text-accent-400 text-xl"></i></div>
             <span class="text-xs text-gray-400">Blog</span>
         </div>
         <div class="text-3xl font-bold text-white">{{ $totalPosts }}</div>
@@ -64,7 +64,7 @@
         <div class="space-y-3">
             @forelse($recentPosts as $post)
             <div class="flex items-center gap-3 p-3 rounded-xl hover:bg-white/5 transition">
-                <div class="w-10 h-10 bg-purple-500/20 rounded-xl flex items-center justify-center shrink-0"><i class="fas fa-file-alt text-purple-400"></i></div>
+                <div class="w-10 h-10 bg-accent-500/20 rounded-xl flex items-center justify-center shrink-0"><i class="fas fa-file-alt text-accent-400"></i></div>
                 <div class="min-w-0 flex-1">
                     <div class="text-white text-sm font-medium truncate">{{ $post->title }}</div>
                     <div class="flex items-center gap-2 text-xs text-gray-400"><span class="px-2 py-0.5 rounded-full {{ $post->status == 'published' ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400' }}">{{ ucfirst($post->status) }}</span><span>{{ $post->created_at->diffForHumans() }}</span></div>

@@ -25,7 +25,7 @@
             </div>
             <div>
                 <label class="block text-sm text-gray-400 mb-2">Icon Color</label>
-                <input type="color" name="icon_color" value="{{ old('icon_color', $service->icon_color ?? '#6366f1') }}" class="w-full h-12 bg-white/5 border border-white/10 rounded-xl cursor-pointer">
+                <input type="color" name="icon_color" value="{{ old('icon_color', $service->icon_color ?? '#176BFF') }}" class="w-full h-12 bg-white/5 border border-white/10 rounded-xl cursor-pointer">
             </div>
         </div>
         <div class="grid grid-cols-2 gap-4">

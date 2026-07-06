@@ -1,5 +1,6 @@
 @extends('layouts.app')
-@section('title', 'Portfolio Agency - Creative Digital Solutions')
+@section('title', 'Logicore - Think. Build. Scale.')
+@section('meta_description', 'Logicore builds intelligent digital solutions and scalable systems that help businesses innovate, automate, and grow.')
 @section('content')
     @include('sections.hero')
     @include('sections.about')

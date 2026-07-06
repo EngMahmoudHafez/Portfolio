@@ -4,13 +4,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Admin Dashboard')</title>
+    <title>@yield('title', 'Logicore Admin')</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-[#0f0f23] text-white antialiased" x-data="{ sidebarOpen: true }">
+<body class="bg-[#0A0F23] text-white antialiased" x-data="{ sidebarOpen: true }">
     {{-- Toast --}}
     @if(session('success'))
     <div x-data="{show:true}" x-show="show" x-init="setTimeout(()=>show=false,4000)" x-transition class="fixed top-6 right-6 z-[100] glass rounded-2xl px-6 py-4 text-green-400 flex items-center gap-3 shadow-2xl">
@@ -26,10 +26,10 @@
 
     <div class="flex min-h-screen">
         {{-- Sidebar --}}
-        <aside :class="sidebarOpen ? 'w-64' : 'w-20'" class="fixed top-0 left-0 h-full bg-[#0a0a1a] border-r border-white/5 transition-all duration-300 z-40 flex flex-col">
+        <aside :class="sidebarOpen ? 'w-64' : 'w-20'" class="fixed top-0 left-0 h-full bg-[#0A0F23] border-r border-primary-500/10 transition-all duration-300 z-40 flex flex-col">
             <div class="p-5 flex items-center gap-3 border-b border-white/5">
-                <div class="w-9 h-9 gradient-primary rounded-xl flex items-center justify-center shrink-0"><i class="fas fa-code text-white text-sm"></i></div>
-                <span x-show="sidebarOpen" class="text-lg font-bold text-white">Admin</span>
+                <x-brand-logo :icon-only="true" mark-class="w-9 h-9" />
+                <span x-show="sidebarOpen" class="text-lg font-bold text-white">Logicore Admin</span>
             </div>
             <nav class="flex-1 p-3 space-y-1 overflow-y-auto">
                 @php $r = request()->route()->getName(); @endphp

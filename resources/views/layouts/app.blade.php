@@ -5,13 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', 'Portfolio Agency - Creative Digital Solutions')</title>
-    <meta name="description" content="@yield('meta_description', 'We are a creative agency building premium digital experiences.')">
-    <meta name="keywords" content="@yield('meta_keywords', 'web development, mobile apps, ui/ux design, branding, digital agency')">
+    <title>@yield('title', 'Logicore - Think. Build. Scale.')</title>
+    <meta name="description" content="@yield('meta_description', 'Logicore builds intelligent digital solutions and scalable systems that help businesses innovate, automate, and grow.')">
+    <meta name="keywords" content="@yield('meta_keywords', 'Logicore, scalable systems, AI solutions, web development, mobile apps, UI/UX design, backend engineering')">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('logicore-icon.svg') }}">
 
     <!-- Open Graph -->
-    <meta property="og:title" content="@yield('title', 'Portfolio Agency')">
-    <meta property="og:description" content="@yield('meta_description', 'Creative Digital Solutions')">
+    <meta property="og:title" content="@yield('title', 'Logicore')">
+    <meta property="og:description" content="@yield('meta_description', 'Think. Build. Scale.')">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
 
@@ -29,7 +30,7 @@
         [x-cloak] { display: none !important; }
     </style>
 </head>
-<body class="bg-[#0f0f23] text-white antialiased overflow-x-hidden">
+<body class="bg-[#0A0F23] text-white antialiased overflow-x-hidden">
 
     {{-- Toast Notifications --}}
     @if(session('success'))
@@ -40,7 +41,7 @@
          x-transition:leave="transition ease-in duration-200"
          x-transition:leave-start="opacity-100"
          x-transition:leave-end="opacity-0"
-         class="fixed top-6 right-6 z-[100] glass rounded-2xl px-6 py-4 text-green-400 flex items-center gap-3 shadow-2xl">
+         class="fixed top-6 right-6 z-[100] glass rounded-lg px-6 py-4 text-green-400 flex items-center gap-3 shadow-2xl">
         <i class="fas fa-check-circle text-xl"></i>
         <span>{{ session('success') }}</span>
         <button @click="show = false" class="ml-4 text-gray-400 hover:text-white">
@@ -54,7 +55,7 @@
          x-transition:enter="transition ease-out duration-300"
          x-transition:enter-start="opacity-0 translate-y-4"
          x-transition:enter-end="opacity-100 translate-y-0"
-         class="fixed top-6 right-6 z-[100] glass rounded-2xl px-6 py-4 text-red-400 shadow-2xl max-w-md">
+         class="fixed top-6 right-6 z-[100] glass rounded-lg px-6 py-4 text-red-400 shadow-2xl max-w-md">
         <div class="flex items-center gap-3 mb-2">
             <i class="fas fa-exclamation-circle text-xl"></i>
             <span class="font-semibold">Please fix the following errors:</span>

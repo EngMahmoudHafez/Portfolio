@@ -4,7 +4,7 @@
 <h1 class="text-2xl font-bold mb-8">Website Settings</h1>
 <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data" class="max-w-2xl glass rounded-2xl p-8 space-y-6">
     @csrf @method('PUT')
-    <div><label class="block text-sm text-gray-400 mb-2">Site Name</label><input type="text" name="site_name" value="{{ App\Models\Setting::get('site_name', 'Portfolio Agency') }}" class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"></div>
+    <div><label class="block text-sm text-gray-400 mb-2">Site Name</label><input type="text" name="site_name" value="{{ App\Models\Setting::get('site_name', 'Logicore') }}" class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"></div>
     <div><label class="block text-sm text-gray-400 mb-2">Site Description</label><textarea name="site_description" rows="2" class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none">{{ App\Models\Setting::get('site_description', '') }}</textarea></div>
     <div><label class="block text-sm text-gray-400 mb-2">SEO Keywords</label><input type="text" name="seo_keywords" value="{{ App\Models\Setting::get('seo_keywords', '') }}" class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="web dev, agency, design"></div>
     <div class="grid grid-cols-2 gap-4">
