@@ -1,39 +1,53 @@
-<section id="blog" class="py-24 relative">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16">
-            <span class="text-primary-400 font-semibold text-sm uppercase tracking-normal">Blog</span>
-            <h2 class="text-4xl md:text-5xl font-bold mt-3 mb-4">Latest <span class="text-gradient">Articles</span></h2>
+<section id="blog" class="lc-section relative overflow-hidden bg-surface-1" aria-labelledby="blog-heading">
+
+    <div aria-hidden="true" class="pointer-events-none absolute inset-0">
+        <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary-500/25 to-transparent"></div>
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_55%_45%_at_25%_0%,rgba(0,193,255,0.09),transparent_70%)]"></div>
+    </div>
+
+    <div class="lc-shell relative">
+
+        <div class="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+            <x-section-heading
+                id="blog-heading"
+                eyebrow="Field Notes"
+                lead="Updates and insights on intelligent products, automation, and scalable systems."
+                class="max-w-xl">
+                <x-slot:title-slot>
+                    Latest <span class="text-gradient">articles</span>.
+                </x-slot:title-slot>
+            </x-section-heading>
+
+            @if(($posts ?? collect())->count())
+                <a href="{{ route('blog.index') }}" class="lc-btn lc-btn-outline lc-rise shrink-0 self-start md:self-auto">
+                    View all posts
+                    <i class="fas fa-arrow-right lc-arrow text-[0.7rem]" aria-hidden="true"></i>
+                </a>
+            @endif
         </div>
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            @forelse($posts as $post)
-            <a href="{{ route('blog.show', $post->slug) }}" class="group glass rounded-lg overflow-hidden hover:-translate-y-2 transition-all duration-500">
-                <div class="h-48 overflow-hidden">
-                    @if($post->cover_image)
-                    <img src="{{ asset('storage/'.$post->cover_image) }}" alt="{{ $post->title }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                    @else
-                    <div class="w-full h-full gradient-primary flex items-center justify-center"><i class="fas fa-newspaper text-4xl text-white/50"></i></div>
-                    @endif
+
+        @if(($posts ?? collect())->count())
+            <ul class="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+                @foreach($posts as $post)
+                    <li class="flex">
+                        <x-post-card :post="$post" :index="$loop->index" />
+                    </li>
+                @endforeach
+            </ul>
+        @else
+            <div class="lc-panel lc-edge-lit lc-rise relative mt-14 overflow-hidden px-6 py-16 text-center">
+                <div aria-hidden="true" class="pointer-events-none absolute inset-0 lc-grid-micro lc-mask-soft opacity-40"></div>
+                <div class="relative mx-auto max-w-md">
+                    <span aria-hidden="true"
+                          class="mx-auto flex h-14 w-14 items-center justify-center rounded-md border border-line bg-surface-base text-accent-500">
+                        <i class="fas fa-newspaper text-lg"></i>
+                    </span>
+                    <h3 class="lc-h3 mt-6">Articles coming soon</h3>
+                    <p class="lc-body mt-3">
+                        We're writing up what we've learned building scalable systems. Subscribe below to get the first ones.
+                    </p>
                 </div>
-                <div class="p-6">
-                    <div class="flex items-center gap-3 mb-3 text-xs text-gray-400">
-                        @if($post->category)<span class="text-primary-400">{{ $post->category->name }}</span><span>•</span>@endif
-                        <span>{{ $post->published_at?->format('M d, Y') ?? $post->created_at->format('M d, Y') }}</span>
-                    </div>
-                    <h3 class="text-lg font-bold text-white mb-2 group-hover:text-primary-400 transition-colors line-clamp-2">{{ $post->title }}</h3>
-                    <p class="text-gray-400 text-sm line-clamp-2">{{ $post->excerpt ?? Str::limit(strip_tags($post->body), 120) }}</p>
-                </div>
-            </a>
-            @empty
-            <div class="col-span-full text-center py-12">
-                <i class="fas fa-newspaper text-4xl text-gray-600 mb-4"></i>
-                <p class="text-gray-400">Blog posts coming soon!</p>
             </div>
-            @endforelse
-        </div>
-        @if(count($posts ?? []) > 0)
-        <div class="text-center mt-12">
-            <a href="{{ route('blog.index') }}" class="px-8 py-3 glass text-white font-semibold rounded-lg hover:bg-white/15 transition-all inline-flex items-center gap-2">View All Posts <i class="fas fa-arrow-right"></i></a>
-        </div>
         @endif
     </div>
 </section>

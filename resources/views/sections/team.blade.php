@@ -1,52 +1,108 @@
-<section id="team" class="py-24 relative">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16">
-            <span class="text-primary-400 font-semibold text-sm uppercase tracking-normal">Our Team</span>
-            <h2 class="text-4xl md:text-5xl font-bold mt-3 mb-4">Meet The <span class="text-gradient">Experts</span></h2>
-            <p class="text-gray-400 max-w-2xl mx-auto">A focused team of engineers, designers, and product thinkers building reliable digital solutions.</p>
-        </div>
-        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            @forelse($team as $member)
-            <div class="group glass rounded-lg p-6 text-center hover:bg-white/10 transition-all duration-500 hover:-translate-y-2">
-                <div class="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden ring-2 ring-primary-500/30 group-hover:ring-primary-400 transition-all">
-                    @if($member->photo)
-                    <img src="{{ asset('storage/'.$member->photo) }}" alt="{{ $member->name }}" class="w-full h-full object-cover">
-                    @else
-                    <div class="w-full h-full gradient-primary flex items-center justify-center text-2xl font-bold text-white">{{ substr($member->name,0,1) }}</div>
-                    @endif
-                </div>
-                <h3 class="text-lg font-bold text-white mb-1">{{ $member->name }}</h3>
-                <p class="text-primary-400 text-sm mb-3">{{ $member->position }}</p>
-                @if($member->bio)<p class="text-gray-400 text-xs mb-4 line-clamp-2">{{ $member->bio }}</p>@endif
-                @if($member->skills)
-                <div class="flex flex-wrap justify-center gap-1 mb-4">
-                    @foreach(array_slice($member->skills,0,3) as $skill)
-                    <span class="px-2 py-0.5 text-xs glass rounded-full text-gray-300">{{ $skill }}</span>
-                    @endforeach
-                </div>
-                @endif
-                @if($member->social_links)
-                <div class="flex justify-center gap-2">
-                    @foreach($member->social_links as $link)
-                    <a href="{{ $link['url'] ?? '#' }}" target="_blank" class="w-8 h-8 glass rounded-lg flex items-center justify-center text-gray-400 hover:text-primary-400 hover:bg-primary-500/10 transition-all text-xs">
-                        <i class="fab fa-{{ $link['platform'] ?? 'link' }}"></i>
-                    </a>
-                    @endforeach
-                </div>
-                @endif
-            </div>
+@php
+    $teamMembers = ($team ?? collect());
+
+    $teamFallback = collect([
+        ['name' => 'Engineering', 'position' => 'Scalable Systems', 'bio' => 'Clean architecture, secure APIs, and reliable delivery.'],
+        ['name' => 'Product Design', 'position' => 'UI/UX Strategy', 'bio' => 'Interfaces for websites, apps, dashboards, and tools.'],
+        ['name' => 'Automation', 'position' => 'AI Workflows', 'bio' => 'Smart workflows that remove manual work.'],
+        ['name' => 'Delivery', 'position' => 'Product Thinking', 'bio' => 'Scope, sequencing, and shipping on time.'],
+    ]);
+@endphp
+
+<section id="team" class="lc-section relative overflow-hidden" aria-labelledby="team-heading">
+
+    <div aria-hidden="true" class="pointer-events-none absolute inset-0">
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_50%_50%_at_80%_100%,rgba(23,107,255,0.12),transparent_68%)]"></div>
+        <div class="absolute inset-0 lc-grid-fine lc-mask-soft opacity-35"></div>
+    </div>
+
+    <div class="lc-shell relative">
+
+        <x-section-heading
+            id="team-heading"
+            eyebrow="Our Team"
+            lead="A focused team of engineers, designers, and product thinkers building reliable digital solutions."
+            align="center"
+            class="max-w-2xl">
+            <x-slot:title-slot>
+                Meet the <span class="text-gradient">experts</span>.
+            </x-slot:title-slot>
+        </x-section-heading>
+
+        <ul class="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+            @forelse($teamMembers as $member)
+                @php
+                    $memberSkills = is_array($member->skills) ? array_slice(array_filter($member->skills), 0, 3) : [];
+                    $memberSocials = is_array($member->social_links) ? array_filter($member->social_links) : [];
+                @endphp
+                <li class="lc-card lc-enter-soft group" style="--lc-delay: {{ min($loop->index, 6) * 70 }}ms">
+                    <div class="flex flex-1 flex-col p-6">
+                        <div class="flex items-center gap-4">
+                            <span class="relative h-16 w-16 shrink-0 overflow-hidden rounded-md border border-line bg-surface-base">
+                                @if($member->photo)
+                                    <img src="{{ asset('storage/' . $member->photo) }}" alt="{{ $member->name }}"
+                                         loading="lazy" decoding="async"
+                                         class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105">
+                                @else
+                                    <span aria-hidden="true"
+                                          class="flex h-full w-full items-center justify-center bg-[linear-gradient(140deg,#12203f,#0a0f23)] font-display text-xl font-semibold text-accent-500">
+                                        {{ Str::upper(Str::substr($member->name, 0, 1)) }}
+                                    </span>
+                                @endif
+                            </span>
+
+                            <div class="min-w-0">
+                                <h3 class="lc-h3 text-[1.0625rem]">{{ $member->name }}</h3>
+                                <p class="lc-meta mt-1 text-primary-300">{{ $member->position }}</p>
+                            </div>
+                        </div>
+
+                        @if($member->bio)
+                            <p class="lc-body mt-5 line-clamp-3 text-[0.8125rem]">{{ $member->bio }}</p>
+                        @endif
+
+                        @if(count($memberSkills))
+                            <ul class="mt-5 flex flex-wrap gap-1.5">
+                                @foreach($memberSkills as $skill)
+                                    <li class="lc-tag">{{ $skill }}</li>
+                                @endforeach
+                            </ul>
+                        @endif
+
+                        @if(count($memberSocials))
+                            <ul class="mt-auto flex gap-2 border-t border-line-soft pt-5">
+                                @foreach($memberSocials as $link)
+                                    <li>
+                                        <a href="{{ $link['url'] ?? '#' }}" target="_blank" rel="noopener noreferrer"
+                                           class="flex h-8 w-8 items-center justify-center rounded-sm border border-line-soft text-ink-subtle transition duration-200 hover:border-accent-500/40 hover:bg-accent-500/10 hover:text-accent-500"
+                                           aria-label="{{ $member->name }} on {{ Str::title($link['platform'] ?? 'the web') }}">
+                                            <i class="fab fa-{{ $link['platform'] ?? 'link' }} text-xs" aria-hidden="true"></i>
+                                        </a>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @endif
+                    </div>
+                </li>
             @empty
-            @foreach([['name'=>'Engineering','pos'=>'Scalable Systems'],['name'=>'Product Design','pos'=>'UI/UX Strategy'],['name'=>'Automation','pos'=>'AI Workflows'],['name'=>'Delivery','pos'=>'Product Thinking']] as $m)
-            <div class="group glass rounded-lg p-6 text-center hover:bg-white/10 transition-all duration-500 hover:-translate-y-2">
-                <div class="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden ring-2 ring-primary-500/30">
-                    <div class="w-full h-full gradient-primary flex items-center justify-center text-2xl font-bold text-white">{{ substr($m['name'],0,1) }}</div>
-                </div>
-                <h3 class="text-lg font-bold text-white mb-1">{{ $m['name'] }}</h3>
-                <p class="text-primary-400 text-sm mb-3">{{ $m['pos'] }}</p>
-                <p class="text-gray-400 text-xs leading-relaxed">Profiles coming soon.</p>
-            </div>
-            @endforeach
+                @foreach($teamFallback as $member)
+                    <li class="lc-card lc-enter-soft" style="--lc-delay: {{ $loop->index * 70 }}ms">
+                        <div class="flex flex-1 flex-col p-6">
+                            <div class="flex items-center gap-4">
+                                <span aria-hidden="true"
+                                      class="flex h-16 w-16 shrink-0 items-center justify-center rounded-md border border-line bg-[linear-gradient(140deg,#12203f,#0a0f23)] font-display text-xl font-semibold text-accent-500">
+                                    {{ Str::substr($member['name'], 0, 1) }}
+                                </span>
+                                <div class="min-w-0">
+                                    <h3 class="lc-h3 text-[1.0625rem]">{{ $member['name'] }}</h3>
+                                    <p class="lc-meta mt-1 text-primary-300">{{ $member['position'] }}</p>
+                                </div>
+                            </div>
+                            <p class="lc-body mt-5 text-[0.8125rem]">{{ $member['bio'] }}</p>
+                        </div>
+                    </li>
+                @endforeach
             @endforelse
-        </div>
+        </ul>
     </div>
 </section>

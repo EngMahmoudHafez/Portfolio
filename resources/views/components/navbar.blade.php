@@ -1,62 +1,102 @@
-{{-- Navigation Bar --}}
-<nav x-data="{ open: false, scrolled: false }"
-     @scroll.window="scrolled = (window.scrollY > 50)"
-     :class="scrolled ? 'glass-strong shadow-2xl' : 'bg-transparent'"
-     class="fixed top-0 left-0 right-0 z-50 transition-all duration-500">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-20">
+@php
+    $onHome = request()->routeIs('home');
+
+    // Anchor links resolve against the homepage from anywhere on the site.
+    $navLinks = [
+        ['label' => 'Home',     'href' => route('home') . '#hero',     'current' => $onHome],
+        ['label' => 'About',    'href' => route('home') . '#about',    'current' => false],
+        ['label' => 'Services', 'href' => route('home') . '#services', 'current' => false],
+        ['label' => 'Team',     'href' => route('home') . '#team',     'current' => false],
+        ['label' => 'Projects', 'href' => route('projects.index'),     'current' => request()->routeIs('projects.*')],
+        ['label' => 'Blog',     'href' => route('blog.index'),         'current' => request()->routeIs('blog.*')],
+        ['label' => 'Contact',  'href' => route('home') . '#contact',  'current' => false],
+    ];
+@endphp
+
+<header x-data="{ open: false, scrolled: false }"
+        x-init="scrolled = window.scrollY > 24"
+        @scroll.window="scrolled = window.scrollY > 24"
+        @keydown.escape.window="open = false"
+        @resize.window="if (window.innerWidth >= 1024) open = false"
+        :class="(scrolled || open) ? 'lc-nav-scrolled' : ''"
+        class="lc-nav">
+
+    {{-- Luminous hairline under the bar once scrolled --}}
+    <div aria-hidden="true" x-show="scrolled" x-transition.opacity.duration.300ms
+         class="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-accent-500/45 to-transparent"></div>
+
+    <nav aria-label="Primary" class="lc-shell">
+        <div class="flex h-18 items-center justify-between gap-4 lg:h-20">
+
             {{-- Logo --}}
-            <a href="{{ route('home') }}" class="flex items-center gap-3 group">
-                <x-brand-logo class="transition-transform duration-300 group-hover:scale-105" />
+            <a href="{{ route('home') }}"
+               class="group -ml-1 inline-flex shrink-0 items-center rounded-sm px-1 py-1"
+               aria-label="Logicore — home">
+                <x-brand-logo mark-class="h-9 w-auto lg:h-10"
+                              class="transition-opacity duration-200 group-hover:opacity-80" />
             </a>
 
             {{-- Desktop Menu --}}
-            <div class="hidden lg:flex items-center gap-1">
-                <a href="{{ route('home') }}#hero" class="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white rounded-lg hover:bg-white/10 transition-all duration-300">Home</a>
-                <a href="{{ route('home') }}#about" class="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white rounded-lg hover:bg-white/10 transition-all duration-300">About</a>
-                <a href="{{ route('home') }}#services" class="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white rounded-lg hover:bg-white/10 transition-all duration-300">Services</a>
-                <a href="{{ route('home') }}#team" class="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white rounded-lg hover:bg-white/10 transition-all duration-300">Team</a>
-                <a href="{{ route('projects.index') }}" class="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white rounded-lg hover:bg-white/10 transition-all duration-300">Projects</a>
-                <a href="{{ route('blog.index') }}" class="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white rounded-lg hover:bg-white/10 transition-all duration-300">Blog</a>
-                <a href="{{ route('home') }}#contact" class="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white rounded-lg hover:bg-white/10 transition-all duration-300">Contact</a>
+            <div class="hidden items-center gap-0.5 lg:flex">
+                @foreach($navLinks as $link)
+                    <a href="{{ $link['href'] }}"
+                       class="lc-nav-link"
+                       @if($link['current']) aria-current="page" @endif>{{ $link['label'] }}</a>
+                @endforeach
             </div>
 
-            {{-- CTA + Dark Mode --}}
-            <div class="hidden lg:flex items-center gap-4">
-                <a href="{{ route('home') }}#contact"
-                   class="px-6 py-2.5 gradient-primary text-white text-sm font-semibold rounded-lg hover:opacity-90 transition-all duration-300 hover:shadow-lg hover:shadow-primary-500/25">
-                    Start Project
+            {{-- Desktop CTA --}}
+            <div class="hidden shrink-0 items-center gap-3 lg:flex">
+                <span aria-hidden="true" class="h-5 w-px bg-line"></span>
+                <a href="{{ route('home') }}#contact" class="lc-btn lc-btn-primary lc-btn-sm">
+                    Start a project
+                    <i class="fas fa-arrow-right lc-arrow text-[0.7rem]" aria-hidden="true"></i>
                 </a>
             </div>
 
             {{-- Mobile Menu Button --}}
-            <button @click="open = !open" class="lg:hidden text-white p-2 rounded-lg hover:bg-white/10 transition">
-                <i x-show="!open" class="fas fa-bars text-xl"></i>
-                <i x-show="open" x-cloak class="fas fa-times text-xl"></i>
+            <button type="button"
+                    @click="open = !open"
+                    :aria-expanded="open ? 'true' : 'false'"
+                    aria-controls="mobile-menu"
+                    class="lc-btn lc-btn-outline lc-btn-sm -mr-1 h-10 w-10 !px-0 lg:hidden">
+                <span class="sr-only">Toggle navigation menu</span>
+                <i x-show="!open" class="fas fa-bars text-base" aria-hidden="true"></i>
+                <i x-show="open" x-cloak class="fas fa-xmark text-base" aria-hidden="true"></i>
             </button>
         </div>
-    </div>
+    </nav>
 
     {{-- Mobile Menu --}}
-    <div x-show="open" x-cloak
-         x-transition:enter="transition ease-out duration-300"
-         x-transition:enter-start="opacity-0 -translate-y-4"
+    <div id="mobile-menu"
+         x-show="open"
+         x-cloak
+         x-transition:enter="transition ease-out duration-250"
+         x-transition:enter-start="opacity-0 -translate-y-2"
          x-transition:enter-end="opacity-100 translate-y-0"
-         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave="transition ease-in duration-150"
          x-transition:leave-start="opacity-100"
-         x-transition:leave-end="opacity-0 -translate-y-4"
-         class="lg:hidden glass-strong mx-4 mb-4 rounded-lg overflow-hidden">
-        <div class="p-4 space-y-1">
-            <a href="{{ route('home') }}#hero" @click="open = false" class="block px-4 py-3 text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition">Home</a>
-            <a href="{{ route('home') }}#about" @click="open = false" class="block px-4 py-3 text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition">About</a>
-            <a href="{{ route('home') }}#services" @click="open = false" class="block px-4 py-3 text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition">Services</a>
-            <a href="{{ route('home') }}#team" @click="open = false" class="block px-4 py-3 text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition">Team</a>
-            <a href="{{ route('projects.index') }}" @click="open = false" class="block px-4 py-3 text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition">Projects</a>
-            <a href="{{ route('blog.index') }}" @click="open = false" class="block px-4 py-3 text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition">Blog</a>
-            <a href="{{ route('home') }}#contact" @click="open = false" class="block px-4 py-3 text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition">Contact</a>
-            <div class="pt-4">
-                <a href="{{ route('home') }}#contact" class="block text-center px-6 py-3 gradient-primary text-white font-semibold rounded-lg">Start Project</a>
-            </div>
+         x-transition:leave-end="opacity-0 -translate-y-2"
+         class="lg:hidden">
+        <div class="lc-shell pb-4">
+            <nav aria-label="Mobile" class="lc-panel lc-edge-lit overflow-hidden p-2 shadow-2xl">
+                @foreach($navLinks as $link)
+                    <a href="{{ $link['href'] }}"
+                       @click="open = false"
+                       class="lc-nav-mobile-link"
+                       @if($link['current']) aria-current="page" @endif>
+                        <span>{{ $link['label'] }}</span>
+                        <i class="fas fa-chevron-right text-[0.65rem] opacity-40" aria-hidden="true"></i>
+                    </a>
+                @endforeach
+
+                <div class="mt-2 border-t border-line-soft p-2 pt-3">
+                    <a href="{{ route('home') }}#contact" @click="open = false" class="lc-btn lc-btn-primary lc-btn-block">
+                        Start a project
+                        <i class="fas fa-arrow-right lc-arrow text-[0.7rem]" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </nav>
         </div>
     </div>
-</nav>
+</header>

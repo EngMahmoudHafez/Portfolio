@@ -1,141 +1,143 @@
-@once
-    <style>
-        .logicore-footer__grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 2.5rem;
-            align-items: start;
-        }
+@php
+    $footerQuickLinks = [
+        ['label' => 'About Us', 'href' => route('home') . '#about'],
+        ['label' => 'Services', 'href' => route('home') . '#services'],
+        ['label' => 'Projects', 'href' => route('projects.index')],
+        ['label' => 'Blog',     'href' => route('blog.index')],
+        ['label' => 'Contact',  'href' => route('home') . '#contact'],
+    ];
 
-        .logicore-footer__links {
-            display: grid;
-            gap: 0.75rem;
-        }
+    $footerServices = [
+        'Web Development',
+        'Mobile Apps',
+        'UI/UX Design',
+        'Branding',
+        'AI Solutions',
+    ];
 
-        .logicore-footer__link {
-            color: #a8b3c7;
-            font-size: 0.875rem;
-            transition: color 180ms ease, transform 180ms ease;
-        }
+    // Social links come from admin settings; only configured channels render.
+    $footerSocials = collect([
+        ['platform' => 'github',   'icon' => 'fab fa-github',      'label' => 'GitHub'],
+        ['platform' => 'linkedin', 'icon' => 'fab fa-linkedin-in', 'label' => 'LinkedIn'],
+        ['platform' => 'twitter',  'icon' => 'fab fa-twitter',     'label' => 'Twitter'],
+        ['platform' => 'facebook', 'icon' => 'fab fa-facebook-f',  'label' => 'Facebook'],
+        ['platform' => 'instagram','icon' => 'fab fa-instagram',   'label' => 'Instagram'],
+    ])->map(fn ($social) => $social + ['href' => \App\Models\Setting::get('social_' . $social['platform'])])
+      ->filter(fn ($social) => filled($social['href']))
+      ->push([
+          'platform' => 'email',
+          'icon' => 'fas fa-envelope',
+          'label' => 'Contact Logicore',
+          'href' => route('home') . '#contact',
+      ])
+      ->values();
+@endphp
 
-        .logicore-footer__link:hover {
-            color: #00c1ff;
-            transform: translateX(3px);
-        }
+<footer class="relative mt-px overflow-hidden bg-surface-base">
+    {{-- Luminous top edge --}}
+    <div aria-hidden="true" class="lc-rule absolute inset-x-0 top-0"></div>
 
-        .logicore-footer__social {
-            height: 2.5rem;
-            width: 2.5rem;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 0.5rem;
-            color: #a8b3c7;
-            background: rgba(16, 26, 51, 0.72);
-            border: 1px solid rgba(23, 107, 255, 0.18);
-            transition: color 180ms ease, border-color 180ms ease, background 180ms ease, transform 180ms ease;
-        }
+    {{-- Technical atmosphere --}}
+    <div aria-hidden="true" class="pointer-events-none absolute inset-0">
+        <div class="absolute inset-0 lc-grid-fine lc-mask-top opacity-40"></div>
+        <div class="absolute inset-x-0 top-0 h-64 bg-[radial-gradient(ellipse_60%_100%_at_50%_0%,rgba(23,107,255,0.14),transparent_70%)]"></div>
+    </div>
 
-        .logicore-footer__social:hover {
-            color: #00c1ff;
-            border-color: rgba(0, 193, 255, 0.46);
-            background: rgba(23, 107, 255, 0.12);
-            transform: translateY(-2px);
-        }
+    <div class="lc-shell relative pt-16 pb-8 lg:pt-20">
 
-        @media (min-width: 640px) {
-            .logicore-footer__grid {
-                grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-            }
-        }
+        <div class="grid gap-12 md:grid-cols-2 lg:grid-cols-12 lg:gap-10">
 
-        @media (min-width: 900px) {
-            .logicore-footer__grid {
-                grid-template-columns: minmax(13rem, 1.45fr) minmax(7rem, 0.75fr) minmax(9rem, 0.85fr) minmax(15rem, 1.25fr);
-                gap: 2rem;
-            }
-        }
-    </style>
-@endonce
-
-{{-- Footer --}}
-<footer class="relative bg-[#0A0F23] border-t border-primary-500/10">
-    {{-- Gradient top border --}}
-    <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary-500 to-transparent"></div>
-
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-14">
-        <div class="logicore-footer__grid">
             {{-- Brand --}}
-            <div class="max-w-sm">
-                <a href="{{ route('home') }}" class="inline-flex items-center gap-3 mb-5">
-                    <x-brand-logo />
+            <div class="lg:col-span-4">
+                <a href="{{ route('home') }}" class="inline-flex rounded-sm" aria-label="Logicore — home">
+                    <x-brand-logo mark-class="h-10 w-auto" />
                 </a>
-                <p class="text-[#A8B3C7] text-sm leading-relaxed mb-5">
-                    We build intelligent digital solutions and scalable systems that help businesses grow.
+                <p class="lc-body mt-5 max-w-xs">
+                    We build intelligent digital solutions and scalable systems that help businesses innovate, automate, and grow.
                 </p>
-                <div class="flex gap-3">
-                    <a href="#" class="logicore-footer__social" aria-label="GitHub">
-                        <i class="fab fa-github"></i>
-                    </a>
-                    <a href="#" class="logicore-footer__social" aria-label="LinkedIn">
-                        <i class="fab fa-linkedin-in"></i>
-                    </a>
-                    <a href="#" class="logicore-footer__social" aria-label="Twitter">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                    <a href="{{ route('home') }}#contact" class="logicore-footer__social" aria-label="Email Logicore">
-                        <i class="fas fa-envelope"></i>
-                    </a>
-                </div>
+                <p class="lc-meta mt-5">Think. Build. Scale.</p>
+
+                <ul class="mt-6 flex gap-2.5">
+                    @foreach($footerSocials as $social)
+                        <li>
+                            <a href="{{ $social['href'] }}"
+                               class="flex h-10 w-10 items-center justify-center rounded-md border border-line-soft bg-surface-2 text-ink-subtle transition duration-200 hover:-translate-y-0.5 hover:border-accent-500/40 hover:bg-surface-3 hover:text-accent-500"
+                               aria-label="{{ $social['label'] }}">
+                                <i class="{{ $social['icon'] }} text-sm" aria-hidden="true"></i>
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
             </div>
 
             {{-- Quick Links --}}
-            <div>
-                <h4 class="text-white font-semibold mb-5">Quick Links</h4>
-                <ul class="logicore-footer__links">
-                    <li><a href="{{ route('home') }}#about" class="logicore-footer__link">About Us</a></li>
-                    <li><a href="{{ route('home') }}#services" class="logicore-footer__link">Services</a></li>
-                    <li><a href="{{ route('projects.index') }}" class="logicore-footer__link">Projects</a></li>
-                    <li><a href="{{ route('blog.index') }}" class="logicore-footer__link">Blog</a></li>
-                    <li><a href="{{ route('home') }}#contact" class="logicore-footer__link">Contact</a></li>
+            <nav class="lg:col-span-2" aria-labelledby="footer-nav-heading">
+                <h2 id="footer-nav-heading" class="lc-meta uppercase tracking-[0.18em] text-ink-subtle">Navigate</h2>
+                <ul class="mt-5 space-y-3">
+                    @foreach($footerQuickLinks as $link)
+                        <li>
+                            <a href="{{ $link['href'] }}"
+                               class="inline-block rounded-sm text-sm text-ink-muted transition duration-200 hover:translate-x-0.5 hover:text-accent-500">
+                                {{ $link['label'] }}
+                            </a>
+                        </li>
+                    @endforeach
                 </ul>
-            </div>
+            </nav>
 
             {{-- Services --}}
-            <div>
-                <h4 class="text-white font-semibold mb-5">Services</h4>
-                <ul class="logicore-footer__links">
-                    <li><a href="{{ route('home') }}#services" class="logicore-footer__link">Web Development</a></li>
-                    <li><a href="{{ route('home') }}#services" class="logicore-footer__link">Mobile Apps</a></li>
-                    <li><a href="{{ route('home') }}#services" class="logicore-footer__link">UI/UX Design</a></li>
-                    <li><a href="{{ route('home') }}#services" class="logicore-footer__link">Branding</a></li>
-                    <li><a href="{{ route('home') }}#services" class="logicore-footer__link">AI Solutions</a></li>
+            <nav class="lg:col-span-2" aria-labelledby="footer-services-heading">
+                <h2 id="footer-services-heading" class="lc-meta uppercase tracking-[0.18em] text-ink-subtle">Capabilities</h2>
+                <ul class="mt-5 space-y-3">
+                    @foreach($footerServices as $service)
+                        <li>
+                            <a href="{{ route('home') }}#services"
+                               class="inline-block rounded-sm text-sm text-ink-muted transition duration-200 hover:translate-x-0.5 hover:text-accent-500">
+                                {{ $service }}
+                            </a>
+                        </li>
+                    @endforeach
                 </ul>
-            </div>
+            </nav>
 
             {{-- Newsletter --}}
-            <div class="max-w-md">
-                <h4 class="text-white font-semibold mb-5">Newsletter</h4>
-                <p class="text-[#A8B3C7] text-sm leading-relaxed mb-4">Subscribe to get the latest updates and insights.</p>
-                <form action="{{ route('newsletter.store') }}" method="POST" class="space-y-3">
-                    @csrf
-                    <input type="email" name="email" placeholder="Enter your email"
-                           class="w-full px-4 py-3 glass rounded-lg border-0 text-white placeholder-gray-500 text-sm focus:ring-2 focus:ring-primary-500 bg-white/5">
-                    <button type="submit" class="w-full px-4 py-3 gradient-primary text-white text-sm font-semibold rounded-lg hover:opacity-90 transition-all">
-                        Subscribe <i class="fas fa-arrow-right ml-2"></i>
-                    </button>
-                </form>
+            <div class="lg:col-span-4">
+                <div class="lc-panel lc-edge-lit p-6">
+                    <h2 class="lc-h3">Signal, not noise</h2>
+                    <p class="lc-body mt-2">
+                        Occasional notes on scalable systems, automation, and product engineering.
+                    </p>
+                    <form action="{{ route('newsletter.store') }}" method="POST" class="mt-5 space-y-3">
+                        @csrf
+                        <div>
+                            <label for="footer-newsletter-email" class="sr-only">Email address</label>
+                            <input type="email"
+                                   id="footer-newsletter-email"
+                                   name="email"
+                                   required
+                                   autocomplete="email"
+                                   placeholder="you@company.com"
+                                   class="lc-field">
+                        </div>
+                        <button type="submit" class="lc-btn lc-btn-primary lc-btn-block">
+                            Subscribe
+                            <i class="fas fa-arrow-right lc-arrow text-[0.7rem]" aria-hidden="true"></i>
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
 
         {{-- Bottom Bar --}}
-        <div class="mt-12 pt-7 border-t border-primary-500/10 flex flex-col md:flex-row items-center justify-between gap-4">
-            <p class="text-gray-500 text-sm">
-                &copy; 2026 Logicore. All rights reserved.
-            </p>
-            <div class="flex gap-6">
-                <a href="#" class="text-gray-500 hover:text-gray-300 text-sm transition-colors">Privacy Policy</a>
-                <a href="#" class="text-gray-500 hover:text-gray-300 text-sm transition-colors">Terms of Service</a>
+        <div class="mt-14 border-t border-line-soft pt-6">
+            <div class="flex flex-col items-center justify-between gap-4 sm:flex-row">
+                <p class="lc-meta">
+                    &copy; {{ now()->year }} Logicore. All rights reserved.
+                </p>
+                <ul class="flex items-center gap-6">
+                    <li><a href="#" class="rounded-sm text-xs text-ink-subtle transition hover:text-ink-muted">Privacy Policy</a></li>
+                    <li><a href="#" class="rounded-sm text-xs text-ink-subtle transition hover:text-ink-muted">Terms of Service</a></li>
+                </ul>
             </div>
         </div>
     </div>

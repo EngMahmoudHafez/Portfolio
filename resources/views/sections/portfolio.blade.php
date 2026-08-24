@@ -1,46 +1,59 @@
-<section id="portfolio" class="py-24 relative">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16">
-            <span class="text-primary-400 font-semibold text-sm uppercase tracking-normal">Our Work</span>
-            <h2 class="text-4xl md:text-5xl font-bold mt-3 mb-4">Featured <span class="text-gradient">Projects</span></h2>
-            <p class="text-gray-400 max-w-2xl mx-auto">Explore how Logicore turns ideas into practical digital products.</p>
+<section id="portfolio" class="lc-section relative overflow-hidden bg-surface-1" aria-labelledby="portfolio-heading">
+
+    <div aria-hidden="true" class="pointer-events-none absolute inset-0">
+        <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary-500/25 to-transparent"></div>
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_55%_50%_at_15%_25%,rgba(0,193,255,0.10),transparent_65%)]"></div>
+        <div class="absolute inset-0 lc-grid-fine lc-mask-soft opacity-45"></div>
+    </div>
+
+    <div class="lc-shell relative">
+
+        <div class="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+            <x-section-heading
+                id="portfolio-heading"
+                eyebrow="Our Work"
+                lead="Explore how Logicore turns ideas into practical digital products."
+                class="max-w-xl">
+                <x-slot:title-slot>
+                    Featured <span class="text-gradient">projects</span>.
+                </x-slot:title-slot>
+            </x-section-heading>
+
+            @if(($projects ?? collect())->count())
+                <a href="{{ route('projects.index') }}" class="lc-btn lc-btn-outline lc-rise shrink-0 self-start md:self-auto">
+                    View all projects
+                    <i class="fas fa-arrow-right lc-arrow text-[0.7rem]" aria-hidden="true"></i>
+                </a>
+            @endif
         </div>
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            @forelse($projects as $project)
-            <a href="{{ route('projects.show', $project->slug) }}" class="group glass rounded-lg overflow-hidden hover:-translate-y-2 transition-all duration-500">
-                <div class="h-48 overflow-hidden">
-                    @if($project->cover_image)
-                    <img src="{{ asset('storage/'.$project->cover_image) }}" alt="{{ $project->title }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                    @else
-                    <div class="w-full h-full gradient-primary flex items-center justify-center"><i class="fas fa-project-diagram text-4xl text-white/50"></i></div>
-                    @endif
+
+        @if(($projects ?? collect())->count())
+            <ul class="mt-14 grid gap-5 sm:grid-cols-2 lg:gap-6 xl:grid-cols-3">
+                @foreach($projects as $project)
+                    <li class="flex">
+                        <x-project-card :project="$project" :index="$loop->index" />
+                    </li>
+                @endforeach
+            </ul>
+        @else
+            <div class="lc-panel lc-edge-lit lc-rise relative mt-14 overflow-hidden px-6 py-16 text-center">
+                <div aria-hidden="true" class="pointer-events-none absolute inset-0 lc-grid-micro lc-mask-soft opacity-40"></div>
+                <div class="relative mx-auto max-w-md">
+                    <span aria-hidden="true"
+                          class="mx-auto flex h-14 w-14 items-center justify-center rounded-md border border-line bg-surface-base text-accent-500">
+                        <i class="fas fa-folder-open text-lg"></i>
+                    </span>
+                    <h3 class="lc-h3 mt-6">Case studies coming soon</h3>
+                    <p class="lc-body mt-3">
+                        We're preparing the first set of published builds. In the meantime, tell us what you need
+                        and we'll walk you through comparable work.
+                    </p>
+                    <a href="#contact" class="lc-btn lc-btn-primary mt-7">
+                        Start a project
+                        <i class="fas fa-arrow-right lc-arrow text-[0.7rem]" aria-hidden="true"></i>
+                    </a>
                 </div>
-                <div class="p-6">
-                    @if($project->category)<span class="text-xs text-primary-400 font-medium">{{ $project->category->name }}</span>@endif
-                    <h3 class="text-lg font-bold text-white mt-1 mb-2 group-hover:text-primary-400 transition-colors">{{ $project->title }}</h3>
-                    <p class="text-gray-400 text-sm line-clamp-2">{{ $project->short_description ?? Str::limit($project->description, 100) }}</p>
-                    @if($project->technologies)
-                    <div class="flex flex-wrap gap-1 mt-3">
-                        @foreach(array_slice($project->technologies,0,3) as $tech)
-                        <span class="px-2 py-0.5 text-xs glass rounded-full text-gray-300">{{ $tech }}</span>
-                        @endforeach
-                    </div>
-                    @endif
-                </div>
-            </a>
-            @empty
-            <div class="col-span-full text-center py-12">
-                <i class="fas fa-folder-open text-4xl text-gray-600 mb-4"></i>
-                <p class="text-gray-400">Projects coming soon. Stay tuned!</p>
             </div>
-            @endforelse
-        </div>
-        @if(count($projects ?? []) > 0)
-        <div class="text-center mt-12">
-            <a href="{{ route('projects.index') }}" class="px-8 py-3 glass text-white font-semibold rounded-lg hover:bg-white/15 transition-all inline-flex items-center gap-2">
-                View All Projects <i class="fas fa-arrow-right"></i>
-            </a>
-        </div>
         @endif
     </div>
 </section>

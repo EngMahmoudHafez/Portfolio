@@ -1,21 +1,42 @@
-<section id="skills" class="py-24 relative">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16">
-            <span class="text-primary-400 font-semibold text-sm uppercase tracking-normal">Expertise</span>
-            <h2 class="text-4xl md:text-5xl font-bold mt-3 mb-4">Our <span class="text-gradient">Skills</span></h2>
-        </div>
-        <div class="mx-auto grid max-w-4xl grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-            @forelse($skills as $skill)
-            <div class="glass rounded-lg px-5 py-4 text-center text-sm font-semibold text-gray-200 transition-all duration-300 hover:-translate-y-1 hover:text-white">
-                {{ $skill->name }}
+@php
+    $skillNames = ($skills ?? collect())->pluck('name')->filter()->values();
+
+    if ($skillNames->isEmpty()) {
+        $skillNames = collect(['Laravel', 'React', 'PHP', 'UI/UX', 'Mobile Apps', 'AI Solutions', 'DevOps', 'Backend Engineering']);
+    }
+@endphp
+
+<section id="skills" class="lc-section-tight relative overflow-hidden" aria-labelledby="skills-heading">
+
+    <div aria-hidden="true" class="pointer-events-none absolute inset-0 lc-grid-fine lc-mask-soft opacity-40"></div>
+
+    <div class="lc-shell relative">
+        <div class="grid gap-10 lg:grid-cols-12 lg:items-center lg:gap-16">
+
+            <div class="lc-rise lg:col-span-4">
+                <p class="lc-eyebrow">Expertise</p>
+                <h2 id="skills-heading" class="lc-h2 mt-5 text-[1.75rem] md:text-[2.25rem]">
+                    The stack we <span class="text-gradient">work in</span>.
+                </h2>
+                <p class="lc-body mt-4">
+                    Tools chosen for maintainability and scale — not novelty.
+                </p>
             </div>
-            @empty
-            @foreach(['Laravel', 'React', 'PHP', 'UI/UX', 'Mobile Apps', 'AI Solutions', 'DevOps', 'Backend Engineering'] as $skillName)
-            <div class="glass rounded-lg px-5 py-4 text-center text-sm font-semibold text-gray-200 transition-all duration-300 hover:-translate-y-1 hover:text-white">
-                {{ $skillName }}
+
+            <div class="lc-rise lg:col-span-8">
+                <ul class="grid gap-px overflow-hidden rounded-lg border border-line-soft bg-line-soft sm:grid-cols-2 lg:grid-cols-3">
+                    @foreach($skillNames as $i => $skill)
+                        <li class="group flex items-center justify-between gap-4 bg-surface-2 px-5 py-4 transition-colors duration-200 hover:bg-surface-3">
+                            <span class="font-display text-[0.9375rem] font-medium text-ink-muted transition-colors duration-200 group-hover:text-ink">
+                                {{ $skill }}
+                            </span>
+                            <span aria-hidden="true" class="lc-meta text-ink-subtle/60 transition-colors duration-200 group-hover:text-accent-500">
+                                {{ str_pad((string) ($i + 1), 2, '0', STR_PAD_LEFT) }}
+                            </span>
+                        </li>
+                    @endforeach
+                </ul>
             </div>
-            @endforeach
-            @endforelse
         </div>
     </div>
 </section>

@@ -7,8 +7,19 @@
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
+/* =============================================
+   1. DESIGN TOKENS
+   Semantic tokens drive the whole public site.
+   Palette stays navy / electric blue / cyan.
+   ============================================= */
+
 @theme {
-    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    /* --- Typography ------------------------------------------------ */
+    --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-display: 'Space Grotesk', 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+    /* --- Brand scales (unchanged, admin depends on these) ---------- */
     --color-primary-50: #f2f4f8;
     --color-primary-100: #dbe8ff;
     --color-primary-200: #b8d3ff;
@@ -22,10 +33,114 @@
     --color-accent-400: #6ea8ff;
     --color-accent-500: #00c1ff;
     --color-accent-600: #009fd6;
+
+    /* --- Semantic surfaces ----------------------------------------- */
+    --color-surface-base: #070b1a;
+    --color-surface-1: #0a0f23;
+    --color-surface-2: #0c1330;
+    --color-surface-3: #101a3f;
+    --color-surface-4: #16224f;
+
+    /* --- Semantic borders ------------------------------------------ */
+    --color-line-soft: rgba(110, 168, 255, 0.09);
+    --color-line: rgba(110, 168, 255, 0.16);
+    --color-line-strong: rgba(110, 168, 255, 0.32);
+
+    /* --- Semantic text --------------------------------------------- */
+    --color-ink: #f0f4ff;
+    --color-ink-muted: #a8b3c7;
+    --color-ink-subtle: #8593b5;
+
+    /* --- Semantic roles -------------------------------------------- */
+    --color-brand: #176bff;
+    --color-brand-bright: #1673ff;
+    --color-brand-pale: #6ea8ff;
+    --color-signal: #00c1ff;
+}
+
+@layer base {
+    :root {
+        /* Raw channel values for alpha composition */
+        --lc-brand-rgb: 23 107 255;
+        --lc-signal-rgb: 0 193 255;
+        --lc-pale-rgb: 110 168 255;
+        --lc-base-rgb: 10 15 35;
+
+        /* Elevation — restrained, never oversized */
+        --lc-shadow-xs: 0 1px 2px rgb(0 0 0 / 0.32);
+        --lc-shadow-sm: 0 2px 8px rgb(0 0 0 / 0.34);
+        --lc-shadow-md: 0 10px 26px -12px rgb(0 0 0 / 0.62);
+        --lc-shadow-lg: 0 22px 48px -22px rgb(0 0 0 / 0.7);
+        --lc-shadow-ring: 0 0 0 1px rgb(var(--lc-pale-rgb) / 0.16);
+        --lc-shadow-lift: 0 20px 44px -24px rgb(var(--lc-brand-rgb) / 0.55);
+
+        /* Geometry — squared-off, technical, not pill-heavy */
+        --lc-radius-xs: 4px;
+        --lc-radius-sm: 6px;
+        --lc-radius-md: 10px;
+        --lc-radius-lg: 14px;
+
+        /* Motion */
+        --lc-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+        --lc-fast: 160ms;
+        --lc-base: 240ms;
+        --lc-slow: 420ms;
+    }
+
+    ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+    ::-webkit-scrollbar-track {
+        background: var(--color-surface-base);
+    }
+    ::-webkit-scrollbar-thumb {
+        background: rgb(var(--lc-brand-rgb) / 0.55);
+        border: 2px solid var(--color-surface-base);
+        border-radius: 999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: rgb(var(--lc-signal-rgb) / 0.7);
+    }
+
+    html {
+        scroll-behavior: smooth;
+        /* Fixed navbar height + breathing room for in-page anchors */
+        scroll-padding-top: 6.5rem;
+        -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+        font-family: var(--font-sans);
+        font-feature-settings: 'ss01', 'cv05';
+        text-rendering: optimizeLegibility;
+    }
+
+    h1, h2, h3, h4, .lc-display {
+        font-family: var(--font-display);
+        letter-spacing: -0.022em;
+        text-wrap: balance;
+    }
+
+    p, li {
+        text-wrap: pretty;
+    }
+
+    ::selection {
+        background: rgb(var(--lc-brand-rgb) / 0.42);
+        color: #fff;
+    }
+
+    /* Global, consistent keyboard affordance */
+    :focus-visible {
+        outline: 2px solid var(--color-signal);
+        outline-offset: 3px;
+        border-radius: var(--lc-radius-xs);
+    }
 }
 
 /* =============================================
-   GLASSMORPHISM & PREMIUM STYLES
+   2. LEGACY UTILITIES (retained — admin uses these)
    ============================================= */
 
 @utility glass {
@@ -68,7 +183,7 @@
 }
 
 @utility text-gradient {
-    background: linear-gradient(135deg, #6ea8ff, #176bff, #00c1ff);
+    background: linear-gradient(120deg, #6ea8ff 0%, #4f9bff 40%, #00c1ff 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -99,7 +214,866 @@
 }
 
 /* =============================================
-   ANIMATIONS
+   3. TECHNICAL ATMOSPHERE
+   Layered, subtle, always behind content.
+   ============================================= */
+
+@utility lc-grid-fine {
+    background-image:
+        linear-gradient(to right, rgb(var(--lc-pale-rgb) / 0.055) 1px, transparent 1px),
+        linear-gradient(to bottom, rgb(var(--lc-pale-rgb) / 0.055) 1px, transparent 1px);
+    background-size: 56px 56px;
+}
+
+@utility lc-grid-micro {
+    background-image:
+        linear-gradient(to right, rgb(var(--lc-pale-rgb) / 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgb(var(--lc-pale-rgb) / 0.05) 1px, transparent 1px);
+    background-size: 16px 16px;
+}
+
+@utility lc-circuit {
+    background-image:
+        linear-gradient(90deg, transparent 0 11.8%, rgb(var(--lc-signal-rgb) / 0.16) 11.8% 12%, transparent 12% 100%),
+        linear-gradient(0deg, transparent 0 33.6%, rgb(var(--lc-brand-rgb) / 0.14) 33.6% 33.8%, transparent 33.8% 100%),
+        linear-gradient(90deg, transparent 0 67.8%, rgb(var(--lc-pale-rgb) / 0.11) 67.8% 68%, transparent 68% 100%),
+        linear-gradient(0deg, transparent 0 79.7%, rgb(var(--lc-signal-rgb) / 0.09) 79.7% 79.9%, transparent 79.9% 100%);
+    background-size: 320px 220px;
+}
+
+@utility lc-noise {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.42'/%3E%3C/svg%3E");
+}
+
+/* Fade a texture out toward the edges so it never fights the content */
+@utility lc-mask-soft {
+    mask-image: radial-gradient(ellipse 78% 70% at 50% 32%, #000 12%, transparent 78%);
+    -webkit-mask-image: radial-gradient(ellipse 78% 70% at 50% 32%, #000 12%, transparent 78%);
+}
+
+@utility lc-mask-top {
+    mask-image: linear-gradient(to bottom, #000 0%, #000 42%, transparent 96%);
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 42%, transparent 96%);
+}
+
+@utility lc-mask-bottom {
+    mask-image: linear-gradient(to top, #000 0%, #000 38%, transparent 92%);
+    -webkit-mask-image: linear-gradient(to top, #000 0%, #000 38%, transparent 92%);
+}
+
+/* =============================================
+   4. COMPONENT PRIMITIVES
+   ============================================= */
+
+@layer components {
+
+    /* ---------- Page + section rhythm ---------- */
+
+    .lc-shell {
+        width: 100%;
+        max-width: 80rem;
+        margin-inline: auto;
+        padding-inline: 1.25rem;
+    }
+    @media (min-width: 640px) { .lc-shell { padding-inline: 1.75rem; } }
+    @media (min-width: 1024px) { .lc-shell { padding-inline: 2.5rem; } }
+
+    .lc-shell-narrow {
+        width: 100%;
+        max-width: 62rem;
+        margin-inline: auto;
+        padding-inline: 1.25rem;
+    }
+    @media (min-width: 640px) { .lc-shell-narrow { padding-inline: 1.75rem; } }
+    @media (min-width: 1024px) { .lc-shell-narrow { padding-inline: 2.5rem; } }
+
+    .lc-section {
+        position: relative;
+        padding-block: 5rem;
+    }
+    @media (min-width: 768px) { .lc-section { padding-block: 7rem; } }
+    @media (min-width: 1280px) { .lc-section { padding-block: 8.5rem; } }
+
+    .lc-section-tight { padding-block: 4rem; }
+    @media (min-width: 768px) { .lc-section-tight { padding-block: 5.5rem; } }
+
+    /* Hairline luminous divider between sections */
+    .lc-rule {
+        height: 1px;
+        border: 0;
+        background: linear-gradient(
+            to right,
+            transparent 0%,
+            rgb(var(--lc-pale-rgb) / 0.06) 18%,
+            rgb(var(--lc-signal-rgb) / 0.34) 50%,
+            rgb(var(--lc-pale-rgb) / 0.06) 82%,
+            transparent 100%
+        );
+    }
+
+    .lc-rule-quiet {
+        height: 1px;
+        border: 0;
+        background: linear-gradient(to right, transparent, rgb(var(--lc-pale-rgb) / 0.16) 50%, transparent);
+    }
+
+    /* ---------- Eyebrow ---------- */
+
+    .lc-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.625rem;
+        font-family: var(--font-mono);
+        font-size: 0.6875rem;
+        font-weight: 500;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--color-brand-pale);
+    }
+
+    .lc-eyebrow::before {
+        content: '';
+        width: 1.75rem;
+        height: 1px;
+        flex: none;
+        background: linear-gradient(to right, transparent, var(--color-signal));
+    }
+
+    .lc-eyebrow-plain::before { display: none; }
+
+    /* ---------- Headings + copy ---------- */
+
+    .lc-h1 {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: clamp(2.5rem, 6.2vw, 4.5rem);
+        line-height: 1.03;
+        letter-spacing: -0.032em;
+        color: var(--color-ink);
+    }
+
+    .lc-h2 {
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: clamp(1.875rem, 3.7vw, 3rem);
+        line-height: 1.1;
+        letter-spacing: -0.028em;
+        color: var(--color-ink);
+    }
+
+    .lc-h3 {
+        font-family: var(--font-display);
+        font-weight: 600;
+        font-size: clamp(1.125rem, 1.6vw, 1.375rem);
+        line-height: 1.25;
+        letter-spacing: -0.018em;
+        color: var(--color-ink);
+    }
+
+    .lc-lead {
+        font-size: 1.0625rem;
+        line-height: 1.7;
+        color: var(--color-ink-muted);
+    }
+    @media (min-width: 768px) { .lc-lead { font-size: 1.125rem; } }
+
+    .lc-body {
+        font-size: 0.9375rem;
+        line-height: 1.72;
+        color: var(--color-ink-muted);
+    }
+
+    .lc-meta {
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.04em;
+        color: var(--color-ink-subtle);
+    }
+
+    /* ---------- Surfaces ---------- */
+
+    /* Flat, opaque panel — the default. Used where hierarchy matters. */
+    .lc-panel {
+        position: relative;
+        background: var(--color-surface-2);
+        border: 1px solid var(--color-line-soft);
+        border-radius: var(--lc-radius-md);
+    }
+
+    /* Deeper recessed surface, for wells and inset areas */
+    .lc-panel-sunken {
+        background: var(--color-surface-base);
+        border: 1px solid var(--color-line-soft);
+        border-radius: var(--lc-radius-md);
+    }
+
+    /* Glass — reserved for floating chrome (navbar, toasts, overlays) */
+    .lc-glass {
+        background: rgb(10 15 35 / 0.72);
+        backdrop-filter: blur(18px) saturate(140%);
+        -webkit-backdrop-filter: blur(18px) saturate(140%);
+        border: 1px solid var(--color-line);
+        border-radius: var(--lc-radius-md);
+    }
+
+    /* Hairline top highlight — reads as a lit edge, not a shadow */
+    .lc-edge-lit::before {
+        content: '';
+        position: absolute;
+        inset-inline: 1px;
+        top: 0;
+        height: 1px;
+        background: linear-gradient(to right, transparent, rgb(var(--lc-pale-rgb) / 0.28), transparent);
+        pointer-events: none;
+    }
+
+    /* ---------- Buttons ---------- */
+
+    .lc-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.8125rem 1.375rem;
+        font-family: var(--font-sans);
+        font-size: 0.875rem;
+        font-weight: 600;
+        letter-spacing: 0.005em;
+        line-height: 1;
+        border-radius: var(--lc-radius-sm);
+        border: 1px solid transparent;
+        cursor: pointer;
+        text-align: center;
+        transition:
+            background-color var(--lc-fast) var(--lc-ease),
+            border-color var(--lc-fast) var(--lc-ease),
+            color var(--lc-fast) var(--lc-ease),
+            box-shadow var(--lc-base) var(--lc-ease),
+            transform var(--lc-fast) var(--lc-ease);
+    }
+
+    .lc-btn:focus-visible {
+        outline: 2px solid var(--color-signal);
+        outline-offset: 2px;
+    }
+
+    .lc-btn-primary {
+        background: linear-gradient(135deg, #1a6dff 0%, #0f5be8 100%);
+        color: #fff;
+        border-color: rgb(var(--lc-pale-rgb) / 0.24);
+        box-shadow: var(--lc-shadow-sm), inset 0 1px 0 rgb(255 255 255 / 0.14);
+    }
+    .lc-btn-primary:hover {
+        background: linear-gradient(135deg, #2a79ff 0%, #1465f5 100%);
+        box-shadow: var(--lc-shadow-md), 0 0 0 1px rgb(var(--lc-signal-rgb) / 0.28), inset 0 1px 0 rgb(255 255 255 / 0.18);
+        transform: translateY(-1px);
+    }
+    .lc-btn-primary:active { transform: translateY(0); }
+
+    .lc-btn-outline {
+        background: rgb(var(--lc-pale-rgb) / 0.04);
+        color: var(--color-ink);
+        border-color: var(--color-line);
+    }
+    .lc-btn-outline:hover {
+        background: rgb(var(--lc-brand-rgb) / 0.13);
+        border-color: var(--color-line-strong);
+        transform: translateY(-1px);
+    }
+    .lc-btn-outline:active { transform: translateY(0); }
+
+    .lc-btn-quiet {
+        background: transparent;
+        color: var(--color-ink-muted);
+        border-color: transparent;
+        padding-inline: 0.75rem;
+    }
+    .lc-btn-quiet:hover {
+        color: var(--color-ink);
+        background: rgb(var(--lc-pale-rgb) / 0.08);
+    }
+
+    .lc-btn-sm { padding: 0.5625rem 0.9375rem; font-size: 0.8125rem; }
+    .lc-btn-lg { padding: 0.9375rem 1.75rem; font-size: 0.9375rem; }
+    .lc-btn-block { display: flex; width: 100%; }
+
+    /* Arrow nudge shared by CTAs and card affordances */
+    .lc-btn .lc-arrow,
+    .lc-arrow {
+        transition: transform var(--lc-base) var(--lc-ease);
+    }
+    .lc-btn:hover .lc-arrow,
+    .group:hover .lc-arrow {
+        transform: translateX(3px);
+    }
+
+    /* ---------- Text link ---------- */
+
+    .lc-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4375rem;
+        color: var(--color-brand-pale);
+        font-weight: 500;
+        transition: color var(--lc-fast) var(--lc-ease);
+    }
+    .lc-link:hover { color: var(--color-signal); }
+
+    /* ---------- Tags ---------- */
+
+    .lc-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+        padding: 0.25rem 0.5625rem;
+        font-family: var(--font-mono);
+        font-size: 0.6875rem;
+        font-weight: 500;
+        line-height: 1.4;
+        letter-spacing: 0.02em;
+        color: #c3d0ea;
+        background: rgb(var(--lc-pale-rgb) / 0.07);
+        border: 1px solid rgb(var(--lc-pale-rgb) / 0.14);
+        border-radius: var(--lc-radius-xs);
+        white-space: nowrap;
+    }
+
+    .lc-tag-accent {
+        color: var(--color-signal);
+        background: rgb(var(--lc-signal-rgb) / 0.09);
+        border-color: rgb(var(--lc-signal-rgb) / 0.26);
+    }
+
+    .lc-tag-ghost {
+        color: var(--color-ink-subtle);
+        background: transparent;
+        border-style: dashed;
+        border-color: rgb(var(--lc-pale-rgb) / 0.18);
+    }
+
+    /* ---------- Form fields ---------- */
+
+    .lc-field {
+        width: 100%;
+        padding: 0.75rem 0.9375rem;
+        font-size: 0.9375rem;
+        color: var(--color-ink);
+        background: var(--color-surface-base);
+        border: 1px solid var(--color-line);
+        border-radius: var(--lc-radius-sm);
+        transition:
+            border-color var(--lc-fast) var(--lc-ease),
+            box-shadow var(--lc-fast) var(--lc-ease),
+            background-color var(--lc-fast) var(--lc-ease);
+    }
+    .lc-field::placeholder { color: var(--color-ink-subtle); }
+    .lc-field:hover { border-color: rgb(var(--lc-pale-rgb) / 0.26); }
+    /* A real outline (not just a box-shadow ring) so the focus state survives
+       forced-colors / high-contrast modes. */
+    .lc-field:focus {
+        outline: 2px solid var(--color-signal);
+        outline-offset: 2px;
+        background: var(--color-surface-1);
+        border-color: rgb(var(--lc-signal-rgb) / 0.5);
+        box-shadow: none;
+    }
+
+    .lc-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-family: var(--font-mono);
+        font-size: 0.6875rem;
+        font-weight: 500;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--color-ink-subtle);
+    }
+
+    .lc-required { color: var(--color-signal); }
+
+    /* ---------- Card ---------- */
+
+    .lc-card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        background: var(--color-surface-2);
+        border: 1px solid var(--color-line-soft);
+        border-radius: var(--lc-radius-md);
+        overflow: hidden;
+        transition:
+            border-color var(--lc-base) var(--lc-ease),
+            box-shadow var(--lc-base) var(--lc-ease),
+            transform var(--lc-base) var(--lc-ease),
+            background-color var(--lc-base) var(--lc-ease);
+    }
+
+    .lc-card:hover,
+    .lc-card:focus-within {
+        background: var(--color-surface-3);
+        border-color: var(--color-line-strong);
+        box-shadow: var(--lc-shadow-lg), var(--lc-shadow-lift);
+        transform: translateY(-4px);
+    }
+
+    .lc-card:focus-within {
+        outline: 2px solid var(--color-signal);
+        outline-offset: 2px;
+    }
+
+    /* Media well — imagery dominates the card */
+    .lc-card-media {
+        position: relative;
+        overflow: hidden;
+        background: var(--color-surface-base);
+        aspect-ratio: 16 / 10;
+    }
+
+    .lc-card-media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform var(--lc-slow) var(--lc-ease), filter var(--lc-slow) var(--lc-ease);
+        filter: saturate(0.92) contrast(1.02);
+    }
+
+    .lc-card:hover .lc-card-media img,
+    .lc-card:focus-within .lc-card-media img {
+        transform: scale(1.045);
+        filter: saturate(1.05) contrast(1.04);
+    }
+
+    /* Readability scrim under overlaid metadata */
+    .lc-card-scrim {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgb(var(--lc-base-rgb) / 0.92) 0%, rgb(var(--lc-base-rgb) / 0.35) 38%, transparent 70%);
+        pointer-events: none;
+    }
+
+    .lc-card-body {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;
+        gap: 0.75rem;
+        padding: 1.25rem;
+    }
+    @media (min-width: 1024px) { .lc-card-body { padding: 1.5rem; } }
+
+    /* Whole-card link target: keeps semantics clean (one real <a>) */
+    .lc-card-target::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+    }
+
+    /* ---------- Branded technical fallback for missing imagery ---------- */
+
+    .lc-fallback {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        background:
+            radial-gradient(circle at 28% 22%, rgb(var(--lc-brand-rgb) / 0.24), transparent 58%),
+            radial-gradient(circle at 82% 88%, rgb(var(--lc-signal-rgb) / 0.16), transparent 62%),
+            linear-gradient(150deg, #0b1330 0%, #070b1a 100%);
+        overflow: hidden;
+    }
+
+    .lc-fallback::before {
+        content: '';
+        position: absolute;
+        inset: -1px;
+        background-image:
+            linear-gradient(to right, rgb(var(--lc-pale-rgb) / 0.1) 1px, transparent 1px),
+            linear-gradient(to bottom, rgb(var(--lc-pale-rgb) / 0.1) 1px, transparent 1px);
+        background-size: 28px 28px;
+    }
+
+    .lc-fallback::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image:
+            linear-gradient(90deg, transparent 0 21.8%, rgb(var(--lc-signal-rgb) / 0.4) 21.8% 22%, transparent 22% 100%),
+            linear-gradient(0deg, transparent 0 63.6%, rgb(var(--lc-pale-rgb) / 0.3) 63.6% 63.8%, transparent 63.8% 100%),
+            linear-gradient(90deg, transparent 0 74.8%, rgb(var(--lc-brand-rgb) / 0.34) 74.8% 75%, transparent 75% 100%);
+        background-size: 100% 100%;
+    }
+
+    .lc-fallback-inner {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.625rem;
+        padding: 1rem;
+        text-align: center;
+    }
+
+    .lc-fallback-mark {
+        display: grid;
+        place-items: center;
+        width: 3rem;
+        height: 3rem;
+        border-radius: var(--lc-radius-sm);
+        color: var(--color-signal);
+        background: rgb(var(--lc-base-rgb) / 0.72);
+        border: 1px solid rgb(var(--lc-signal-rgb) / 0.34);
+        box-shadow: 0 0 0 6px rgb(var(--lc-base-rgb) / 0.4);
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: 1.0625rem;
+        letter-spacing: 0.04em;
+    }
+
+    .lc-fallback-label {
+        font-family: var(--font-mono);
+        font-size: 0.625rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: rgb(var(--lc-pale-rgb) / 0.72);
+    }
+
+    /* ---------- Project navigator (search + filters) ---------- */
+
+    .lc-navigator {
+        position: relative;
+        background: var(--color-surface-2);
+        border: 1px solid var(--color-line-soft);
+        border-radius: var(--lc-radius-lg);
+        box-shadow: var(--lc-shadow-md);
+    }
+
+    .lc-search {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .lc-search-icon {
+        position: absolute;
+        left: 0.9375rem;
+        color: var(--color-ink-subtle);
+        pointer-events: none;
+        transition: color var(--lc-fast) var(--lc-ease);
+        font-size: 0.8125rem;
+    }
+
+    .lc-search:focus-within .lc-search-icon { color: var(--color-signal); }
+
+    .lc-search input {
+        padding-left: 2.5rem;
+    }
+
+    /* Hide the UA's native search affordances — we supply our own clear control */
+    .lc-search input::-webkit-search-decoration,
+    .lc-search input::-webkit-search-cancel-button,
+    .lc-search input::-webkit-search-results-button {
+        -webkit-appearance: none;
+        appearance: none;
+    }
+
+    .lc-search-clear {
+        position: absolute;
+        right: 0.5rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.75rem;
+        height: 1.75rem;
+        border-radius: var(--lc-radius-xs);
+        color: var(--color-ink-subtle);
+        transition: color var(--lc-fast) var(--lc-ease), background-color var(--lc-fast) var(--lc-ease);
+    }
+    .lc-search-clear:hover {
+        color: var(--color-ink);
+        background: rgb(var(--lc-pale-rgb) / 0.1);
+    }
+
+    /* Filter chips */
+    .lc-filter {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 0.875rem;
+        font-size: 0.8125rem;
+        font-weight: 500;
+        line-height: 1.2;
+        color: var(--color-ink-muted);
+        background: transparent;
+        border: 1px solid var(--color-line-soft);
+        border-radius: var(--lc-radius-sm);
+        white-space: nowrap;
+        transition:
+            color var(--lc-fast) var(--lc-ease),
+            background-color var(--lc-fast) var(--lc-ease),
+            border-color var(--lc-fast) var(--lc-ease);
+    }
+
+    .lc-filter:hover {
+        color: var(--color-ink);
+        background: rgb(var(--lc-pale-rgb) / 0.07);
+        border-color: var(--color-line);
+    }
+
+    .lc-filter:focus-visible {
+        outline: 2px solid var(--color-signal);
+        outline-offset: 2px;
+    }
+
+    .lc-filter[aria-current='true'] {
+        color: #fff;
+        background: rgb(var(--lc-brand-rgb) / 0.9);
+        border-color: rgb(var(--lc-signal-rgb) / 0.45);
+        box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.16);
+    }
+
+    .lc-filter[aria-current='true']:hover {
+        background: rgb(var(--lc-brand-rgb) / 1);
+    }
+
+    .lc-filter-count {
+        font-family: var(--font-mono);
+        font-size: 0.625rem;
+        opacity: 0.72;
+    }
+
+    /* Horizontal scroll rail for filters on narrow screens */
+    .lc-rail {
+        display: flex;
+        gap: 0.5rem;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        padding-bottom: 0.125rem;
+        scroll-snap-type: x proximity;
+    }
+    .lc-rail::-webkit-scrollbar { display: none; }
+    .lc-rail > * { scroll-snap-align: start; }
+
+    @media (min-width: 768px) {
+        .lc-rail { flex-wrap: wrap; overflow-x: visible; }
+    }
+
+    /* ---------- Navbar ---------- */
+
+    .lc-nav {
+        position: fixed;
+        inset-inline: 0;
+        top: 0;
+        z-index: 50;
+        transition:
+            background-color var(--lc-base) var(--lc-ease),
+            border-color var(--lc-base) var(--lc-ease),
+            box-shadow var(--lc-base) var(--lc-ease),
+            backdrop-filter var(--lc-base) var(--lc-ease);
+        border-bottom: 1px solid transparent;
+    }
+
+    .lc-nav-scrolled {
+        background: rgb(7 11 26 / 0.82);
+        backdrop-filter: blur(18px) saturate(150%);
+        -webkit-backdrop-filter: blur(18px) saturate(150%);
+        border-bottom-color: var(--color-line-soft);
+        box-shadow: 0 10px 30px -20px rgb(0 0 0 / 0.9);
+    }
+
+    .lc-nav-link {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        padding: 0.5rem 0.8125rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--color-ink-muted);
+        border-radius: var(--lc-radius-xs);
+        transition: color var(--lc-fast) var(--lc-ease), background-color var(--lc-fast) var(--lc-ease);
+    }
+
+    .lc-nav-link::after {
+        content: '';
+        position: absolute;
+        left: 0.8125rem;
+        right: 0.8125rem;
+        bottom: 0.125rem;
+        height: 1px;
+        background: var(--color-signal);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform var(--lc-base) var(--lc-ease);
+    }
+
+    .lc-nav-link:hover {
+        color: var(--color-ink);
+        background: rgb(var(--lc-pale-rgb) / 0.06);
+    }
+
+    .lc-nav-link:hover::after { transform: scaleX(1); }
+
+    .lc-nav-link[aria-current='page'] {
+        color: var(--color-ink);
+    }
+    .lc-nav-link[aria-current='page']::after {
+        transform: scaleX(1);
+        background: linear-gradient(to right, var(--color-brand), var(--color-signal));
+    }
+
+    .lc-nav-mobile-link {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.8125rem 1rem;
+        font-size: 0.9375rem;
+        font-weight: 500;
+        color: var(--color-ink-muted);
+        border-radius: var(--lc-radius-sm);
+        border-left: 2px solid transparent;
+        transition: color var(--lc-fast) var(--lc-ease), background-color var(--lc-fast) var(--lc-ease), border-color var(--lc-fast) var(--lc-ease);
+    }
+    .lc-nav-mobile-link:hover {
+        color: var(--color-ink);
+        background: rgb(var(--lc-pale-rgb) / 0.07);
+    }
+    .lc-nav-mobile-link[aria-current='page'] {
+        color: var(--color-ink);
+        background: rgb(var(--lc-brand-rgb) / 0.13);
+        border-left-color: var(--color-signal);
+    }
+
+    /* Skip link — visible only on keyboard focus */
+    .lc-skip {
+        position: absolute;
+        left: 1rem;
+        top: 1rem;
+        z-index: 100;
+        transform: translateY(-200%);
+        transition: transform var(--lc-base) var(--lc-ease);
+    }
+    .lc-skip:focus { transform: translateY(0); }
+
+    /* ---------- Stat / spec list ---------- */
+
+    .lc-spec {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3125rem;
+        padding: 1rem 0;
+    }
+
+    .lc-spec-key {
+        font-family: var(--font-mono);
+        font-size: 0.625rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--color-ink-subtle);
+    }
+
+    .lc-spec-val {
+        font-family: var(--font-display);
+        font-size: 1.0625rem;
+        font-weight: 600;
+        color: var(--color-ink);
+    }
+
+    /* ---------- Pagination ---------- */
+
+    .lc-page-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 2.375rem;
+        height: 2.375rem;
+        padding-inline: 0.625rem;
+        font-family: var(--font-mono);
+        font-size: 0.8125rem;
+        color: var(--color-ink-muted);
+        background: var(--color-surface-2);
+        border: 1px solid var(--color-line-soft);
+        border-radius: var(--lc-radius-sm);
+        transition:
+            color var(--lc-fast) var(--lc-ease),
+            background-color var(--lc-fast) var(--lc-ease),
+            border-color var(--lc-fast) var(--lc-ease);
+    }
+    .lc-page-link:hover {
+        color: var(--color-ink);
+        background: var(--color-surface-3);
+        border-color: var(--color-line);
+    }
+    .lc-page-link[aria-current='page'] {
+        color: #fff;
+        background: rgb(var(--lc-brand-rgb) / 0.9);
+        border-color: rgb(var(--lc-signal-rgb) / 0.42);
+    }
+    .lc-page-link[aria-disabled='true'] {
+        opacity: 0.38;
+        pointer-events: none;
+    }
+
+    /* ---------- Gallery ---------- */
+
+    .lc-gallery-item {
+        position: relative;
+        display: block;
+        overflow: hidden;
+        border-radius: var(--lc-radius-sm);
+        border: 1px solid var(--color-line-soft);
+        background: var(--color-surface-base);
+        aspect-ratio: 4 / 3;
+        transition: border-color var(--lc-base) var(--lc-ease), box-shadow var(--lc-base) var(--lc-ease);
+    }
+    .lc-gallery-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform var(--lc-slow) var(--lc-ease);
+    }
+    .lc-gallery-item:hover {
+        border-color: var(--color-line-strong);
+        box-shadow: var(--lc-shadow-md);
+    }
+    .lc-gallery-item:hover img { transform: scale(1.05); }
+
+    /* ---------- Prose tuning ---------- */
+
+    .lc-prose {
+        color: var(--color-ink-muted);
+        font-size: 1rem;
+        line-height: 1.78;
+    }
+    .lc-prose :where(h2, h3, h4) {
+        color: var(--color-ink);
+        font-family: var(--font-display);
+    }
+    .lc-prose :where(a) {
+        color: var(--color-brand-pale);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+        text-decoration-color: rgb(var(--lc-pale-rgb) / 0.4);
+    }
+    .lc-prose :where(a):hover {
+        color: var(--color-signal);
+        text-decoration-color: currentColor;
+    }
+    .lc-prose :where(strong) { color: var(--color-ink); }
+    .lc-prose :where(code) {
+        font-family: var(--font-mono);
+        font-size: 0.875em;
+        color: var(--color-signal);
+        background: rgb(var(--lc-signal-rgb) / 0.08);
+        border: 1px solid rgb(var(--lc-signal-rgb) / 0.18);
+        border-radius: var(--lc-radius-xs);
+        padding: 0.1em 0.35em;
+    }
+}
+
+/* =============================================
+   5. MOTION
+   One coherent load sequence + scroll-linked rise.
    ============================================= */
 
 @keyframes float {
@@ -137,68 +1111,89 @@
     to { transform: rotate(360deg); }
 }
 
-@keyframes count-up {
-    from { opacity: 0; transform: translateY(10px); }
+@keyframes lc-enter {
+    from { opacity: 0; transform: translateY(14px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-@utility animate-float {
-    animation: float 6s ease-in-out infinite;
+@keyframes lc-enter-soft {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-@utility animate-pulse-slow {
-    animation: pulse-slow 4s ease-in-out infinite;
+@keyframes lc-sweep {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
 }
 
-@utility animate-slide-up {
-    animation: slide-up 0.6s ease-out forwards;
+@keyframes lc-beacon {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgb(52 211 153 / 0.5); }
+    50% { opacity: 0.72; box-shadow: 0 0 0 5px rgb(52 211 153 / 0); }
 }
 
-@utility animate-slide-in-right {
-    animation: slide-in-right 0.6s ease-out forwards;
-}
+@utility animate-float { animation: float 6s ease-in-out infinite; }
+@utility animate-pulse-slow { animation: pulse-slow 4s ease-in-out infinite; }
+@utility animate-slide-up { animation: slide-up 0.6s ease-out forwards; }
+@utility animate-slide-in-right { animation: slide-in-right 0.6s ease-out forwards; }
+@utility animate-fade-in { animation: fade-in 0.8s ease-out forwards; }
+@utility animate-scale-in { animation: scale-in 0.5s ease-out forwards; }
+@utility animate-spin-slow { animation: spin-slow 20s linear infinite; }
 
-@utility animate-fade-in {
-    animation: fade-in 0.8s ease-out forwards;
-}
-
-@utility animate-scale-in {
-    animation: scale-in 0.5s ease-out forwards;
-}
-
-@utility animate-spin-slow {
-    animation: spin-slow 20s linear infinite;
-}
-
-/* =============================================
-   SCROLLBAR STYLING
-   ============================================= */
-
-@layer base {
-    ::-webkit-scrollbar {
-        width: 8px;
-    }
-    ::-webkit-scrollbar-track {
-        background: #0a0f23;
-    }
-    ::-webkit-scrollbar-thumb {
-        background: linear-gradient(180deg, #176bff, #00c1ff);
-        border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(180deg, #6ea8ff, #00c1ff);
+@layer components {
+    /* Load sequence: opt-in per element, staggered via --lc-delay */
+    .lc-enter {
+        opacity: 0;
+        animation: lc-enter 560ms var(--lc-ease) forwards;
+        animation-delay: var(--lc-delay, 0ms);
     }
 
-    html {
-        scroll-behavior: smooth;
+    .lc-enter-soft {
+        opacity: 0;
+        animation: lc-enter-soft 460ms var(--lc-ease) forwards;
+        animation-delay: var(--lc-delay, 0ms);
     }
 
-    body {
-        font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    .lc-beacon { animation: lc-beacon 2.6s ease-in-out infinite; }
+
+    /* Scroll-linked reveal. Progressive enhancement only: browsers without
+       scroll-driven animation support simply render the content as-is.
+       The range stays inside a single phase (and completes early) so the
+       animation can never strand an element at partial opacity — including
+       elements near the end of the document, where the remaining scroll
+       distance is limited. */
+    @supports (animation-timeline: view()) {
+        @media (prefers-reduced-motion: no-preference) {
+            .lc-rise {
+                animation: lc-enter-soft linear both;
+                animation-timeline: view();
+                animation-range: cover 0% cover 14%;
+            }
+        }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
     }
 
-    ::selection {
-        background: rgba(23, 107, 255, 0.3);
-        color: #fff;
+    .lc-enter,
+    .lc-enter-soft,
+    .lc-rise {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
+    .lc-card:hover,
+    .lc-card:focus-within,
+    .lc-btn:hover {
+        transform: none !important;
     }
 }
