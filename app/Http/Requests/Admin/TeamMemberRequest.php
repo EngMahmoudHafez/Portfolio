@@ -15,7 +15,7 @@ class TeamMemberRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:team_members,slug,' . $this->route('team_member')?->id,
+            'slug' => 'required|string|max:255|unique:team_members,slug,' . $this->route('teamMember')?->id,
             'position' => 'required|string|max:255',
             'bio' => 'nullable|string',
             'photo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',

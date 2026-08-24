@@ -111,8 +111,10 @@
     {{-- Footer --}}
     <x-footer />
 
-    {{-- WhatsApp Button --}}
-    <a href="https://wa.me/1234567890" target="_blank" rel="noopener"
+    {{-- WhatsApp Button — number is managed in Admin > Settings --}}
+    @php($whatsappNumber = preg_replace('/\D/', '', (string) \App\Models\Setting::get('whatsapp_number')))
+    @if($whatsappNumber)
+    <a href="https://wa.me/{{ $whatsappNumber }}" target="_blank" rel="noopener"
        class="group fixed bottom-5 right-4 z-50 flex h-13 w-13 items-center justify-center rounded-full bg-[#25D366] shadow-[0_10px_30px_-10px_rgba(37,211,102,0.8)] transition duration-200 hover:bg-[#1FBE5A] focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-white sm:bottom-6 sm:right-6 sm:h-14 sm:w-14"
        aria-label="Chat with Logicore on WhatsApp">
         <span aria-hidden="true" class="absolute inset-0 rounded-full ring-1 ring-white/25"></span>
@@ -122,6 +124,7 @@
             Chat with us
         </span>
     </a>
+    @endif
 
     @stack('scripts')
 </body>

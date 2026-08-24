@@ -41,12 +41,20 @@
                     <i class="fas fa-users w-5 text-center"></i><span x-show="sidebarOpen">Team</span></a>
                 <a href="{{ route('admin.projects.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all {{ str_starts_with($r,'admin.projects') ? 'gradient-primary text-white' : 'text-gray-400 hover:text-white hover:bg-white/5' }}">
                     <i class="fas fa-folder w-5 text-center"></i><span x-show="sidebarOpen">Projects</span></a>
+                <a href="{{ route('admin.skills.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all {{ str_starts_with($r,'admin.skills') ? 'gradient-primary text-white' : 'text-gray-400 hover:text-white hover:bg-white/5' }}">
+                    <i class="fas fa-layer-group w-5 text-center"></i><span x-show="sidebarOpen">Skills</span></a>
                 <a href="{{ route('admin.posts.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all {{ str_starts_with($r,'admin.posts') ? 'gradient-primary text-white' : 'text-gray-400 hover:text-white hover:bg-white/5' }}">
                     <i class="fas fa-blog w-5 text-center"></i><span x-show="sidebarOpen">Blog</span></a>
+                <a href="{{ route('admin.categories.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all {{ str_starts_with($r,'admin.categories') ? 'gradient-primary text-white' : 'text-gray-400 hover:text-white hover:bg-white/5' }}">
+                    <i class="fas fa-tags w-5 text-center"></i><span x-show="sidebarOpen">Categories</span></a>
+                <a href="{{ route('admin.tags.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all {{ str_starts_with($r,'admin.tags') ? 'gradient-primary text-white' : 'text-gray-400 hover:text-white hover:bg-white/5' }}">
+                    <i class="fas fa-hashtag w-5 text-center"></i><span x-show="sidebarOpen">Tags</span></a>
                 <a href="{{ route('admin.testimonials.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all {{ str_starts_with($r,'admin.testimonials') ? 'gradient-primary text-white' : 'text-gray-400 hover:text-white hover:bg-white/5' }}">
                     <i class="fas fa-star w-5 text-center"></i><span x-show="sidebarOpen">Testimonials</span></a>
                 <a href="{{ route('admin.contacts.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all {{ str_starts_with($r,'admin.contacts') ? 'gradient-primary text-white' : 'text-gray-400 hover:text-white hover:bg-white/5' }}">
                     <i class="fas fa-envelope w-5 text-center"></i><span x-show="sidebarOpen">Messages</span></a>
+                <a href="{{ route('admin.newsletter.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all {{ str_starts_with($r,'admin.newsletter') ? 'gradient-primary text-white' : 'text-gray-400 hover:text-white hover:bg-white/5' }}">
+                    <i class="fas fa-paper-plane w-5 text-center"></i><span x-show="sidebarOpen">Newsletter</span></a>
                 <a href="{{ route('admin.settings.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all {{ str_starts_with($r,'admin.settings') ? 'gradient-primary text-white' : 'text-gray-400 hover:text-white hover:bg-white/5' }}">
                     <i class="fas fa-sliders-h w-5 text-center"></i><span x-show="sidebarOpen">Settings</span></a>
             </nav>

@@ -54,23 +54,42 @@ class ProjectController extends Controller
     public function update(ProjectRequest $request, Project $project): RedirectResponse
     {
         $data = $request->validated();
+        $removals = $data['remove_gallery'] ?? [];
+        unset($data['remove_gallery']);
+
         if ($request->hasFile('cover_image')) {
             $data['cover_image'] = $this->imageService->replace($project->cover_image, $request->file('cover_image'), 'projects');
         }
-        if ($request->hasFile('gallery')) {
-            if ($project->gallery) {
-                foreach ($project->gallery as $oldImage) {
-                    $this->imageService->delete($oldImage);
-                }
-            }
-            $gallery = [];
-            foreach ($request->file('gallery') as $image) {
-                $gallery[] = $this->imageService->upload($image, 'projects/gallery');
-            }
-            $data['gallery'] = $gallery;
-        }
+
+        $data['gallery'] = $this->syncGallery($project, $request->file('gallery') ?? [], $removals);
+
         $project->update($data);
         return redirect()->route('admin.projects.index')->with('success', 'Project updated successfully.');
+    }
+
+    /**
+     * Gallery uploads are additive: new files are appended to what is already
+     * there, and only images the admin explicitly ticked are deleted.
+     *
+     * @param  array<int, \Illuminate\Http\UploadedFile>  $uploads
+     * @param  array<int, string>  $removals
+     * @return array<int, string>
+     */
+    protected function syncGallery(Project $project, array $uploads, array $removals): array
+    {
+        $gallery = $project->gallery ?? [];
+
+        // Only ever delete paths that belong to this project.
+        foreach (array_intersect($removals, $gallery) as $image) {
+            $this->imageService->delete($image);
+        }
+        $gallery = array_values(array_diff($gallery, $removals));
+
+        foreach ($uploads as $image) {
+            $gallery[] = $this->imageService->upload($image, 'projects/gallery');
+        }
+
+        return $gallery;
     }
 
     public function destroy(Project $project): RedirectResponse

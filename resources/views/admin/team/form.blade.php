@@ -15,6 +15,17 @@
         <div><label class="block text-sm text-gray-400 mb-2">Photo</label><input type="file" name="photo" accept="image/*" class="w-full text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-primary-500/20 file:text-primary-400 hover:file:bg-primary-500/30">
             @if(isset($member) && $member->photo)<img src="{{ asset('storage/'.$member->photo) }}" class="w-16 h-16 rounded-full mt-2 object-cover">@endif
         </div>
+        {{-- Skills: rendered as tags on the public team card --}}
+        <x-admin.list-field
+            name="skills"
+            label="Skills"
+            :values="old('skills', $member->skills ?? [])"
+            placeholder="Laravel"
+            hint="Up to three are shown on the public team card."
+            add-label="Add skill" />
+
+        <x-admin.social-links-field :values="old('social_links', $member->social_links ?? [])" />
+
         <div class="grid grid-cols-2 gap-4">
             <div><label class="block text-sm text-gray-400 mb-2">Sort Order</label><input type="number" name="sort_order" value="{{ old('sort_order', $member->sort_order ?? 0) }}" class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"></div>
             <div class="flex items-end"><label class="flex items-center gap-3 cursor-pointer"><input type="hidden" name="is_active" value="0"><input type="checkbox" name="is_active" value="1" {{ old('is_active', $member->is_active ?? true) ? 'checked' : '' }} class="w-5 h-5 rounded bg-white/5 border-white/10 text-primary-500 focus:ring-primary-500"><span class="text-sm text-gray-300">Active</span></label></div>

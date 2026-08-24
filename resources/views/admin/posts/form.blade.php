@@ -16,6 +16,11 @@
             <div><label class="block text-sm text-gray-400 mb-2">Category</label><select name="category_id" class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"><option value="">None</option>@foreach($categories as $c)<option value="{{ $c->id }}" {{ old('category_id', $post->category_id ?? '') == $c->id ? 'selected' : '' }}>{{ $c->name }}</option>@endforeach</select></div>
             <div><label class="block text-sm text-gray-400 mb-2">Status *</label><select name="status" required class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"><option value="draft" {{ old('status', $post->status ?? 'draft') == 'draft' ? 'selected' : '' }}>Draft</option><option value="published" {{ old('status', $post->status ?? '') == 'published' ? 'selected' : '' }}>Published</option></select></div>
         </div>
+        <div>
+            <label class="block text-sm text-gray-400 mb-2">Publish Date</label>
+            <input type="datetime-local" name="published_at" value="{{ old('published_at', isset($post) && $post->published_at ? $post->published_at->format('Y-m-d\TH:i') : '') }}" class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+            <p class="text-xs text-gray-500 mt-2">Leave empty and publishing stamps the current time. A future date keeps the post hidden until then.</p>
+        </div>
         @if(isset($tags) && $tags->count())
         <div><label class="block text-sm text-gray-400 mb-2">Tags</label><div class="flex flex-wrap gap-2">@foreach($tags as $tag)<label class="flex items-center gap-2 px-3 py-1.5 glass rounded-lg cursor-pointer hover:bg-white/10 transition"><input type="checkbox" name="tags[]" value="{{ $tag->id }}" {{ isset($post) && $post->tags->contains($tag->id) ? 'checked' : '' }} class="w-4 h-4 rounded bg-white/5 border-white/10 text-primary-500"><span class="text-sm text-gray-300">{{ $tag->name }}</span></label>@endforeach</div></div>
         @endif

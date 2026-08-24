@@ -21,6 +21,8 @@ class ProjectRequest extends FormRequest
             'cover_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
             'gallery' => 'nullable|array',
             'gallery.*' => 'image|mimes:jpg,jpeg,png,webp|max:5120',
+            'remove_gallery' => 'nullable|array',
+            'remove_gallery.*' => 'string',
             'technologies' => 'nullable|array',
             'technologies.*' => 'string|max:100',
             'live_url' => 'nullable|url|max:255',

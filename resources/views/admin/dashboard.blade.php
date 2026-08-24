@@ -4,7 +4,7 @@
 <h1 class="text-2xl font-bold mb-8">Dashboard Overview</h1>
 
 {{-- Stats --}}
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-8">
     <div class="glass rounded-2xl p-6 hover:bg-white/10 transition-all group">
         <div class="flex items-center justify-between mb-4">
             <div class="w-12 h-12 bg-primary-500/20 rounded-xl flex items-center justify-center group-hover:scale-110 transition"><i class="fas fa-folder text-primary-400 text-xl"></i></div>
@@ -36,6 +36,45 @@
         </div>
         <div class="text-3xl font-bold text-white">{{ $totalPosts }}</div>
         <div class="text-sm text-gray-400 mt-1">{{ $publishedPosts }} published</div>
+    </div>
+    <div class="glass rounded-2xl p-6 hover:bg-white/10 transition-all group">
+        <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center group-hover:scale-110 transition"><i class="fas fa-paper-plane text-purple-400 text-xl"></i></div>
+            <span class="text-xs text-gray-400">Newsletter</span>
+        </div>
+        <div class="text-3xl font-bold text-white">{{ $totalSubscribers }}</div>
+        <div class="text-sm text-gray-400 mt-1">Active subscribers</div>
+    </div>
+</div>
+
+{{-- Which public sections currently have real data behind them --}}
+<div class="glass rounded-2xl p-6 mb-8">
+    <div class="flex items-center justify-between mb-1">
+        <h3 class="text-lg font-semibold">Frontend Content</h3>
+        <a href="{{ route('home') }}" target="_blank" class="text-xs text-primary-400 hover:text-primary-300">
+            View site <i class="fas fa-arrow-up-right-from-square ml-1"></i>
+        </a>
+    </div>
+    <p class="text-xs text-gray-500 mb-5">What each public section is showing right now.</p>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        @foreach($frontendSections as $section)
+        <div class="flex items-center justify-between gap-3 p-3.5 rounded-xl bg-white/[0.03] border border-white/5">
+            <div class="min-w-0">
+                <div class="text-sm text-white truncate">{{ $section['label'] }}</div>
+                <div class="text-xs mt-0.5 {{ $section['count'] > 0 ? 'text-green-400' : 'text-yellow-400' }}">
+                    {{ $section['count'] > 0 ? $section['count'] . ' live' : 'No data — ' . $section['empty'] }}
+                </div>
+            </div>
+            @if($section['route'])
+            <a href="{{ $section['route'] }}" class="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-primary-400 hover:bg-white/5 transition" aria-label="Manage {{ $section['label'] }}">
+                <i class="fas fa-arrow-right text-xs"></i>
+            </a>
+            @else
+            <span class="shrink-0 px-2 py-1 rounded-lg text-[10px] bg-white/5 text-gray-500">&mdash;</span>
+            @endif
+        </div>
+        @endforeach
     </div>
 </div>
 

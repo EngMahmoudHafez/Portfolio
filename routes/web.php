@@ -14,6 +14,10 @@ use App\Http\Controllers\Admin\PostController as AdminPostController;
 use App\Http\Controllers\Admin\TestimonialController as AdminTestimonialController;
 use App\Http\Controllers\Admin\ContactController as AdminContactController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\SkillController as AdminSkillController;
+use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Admin\TagController as AdminTagController;
+use App\Http\Controllers\Admin\NewsletterController as AdminNewsletterController;
 use App\Http\Controllers\Auth\LoginController;
 
 /*
@@ -57,6 +61,14 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     Route::resource('projects', AdminProjectController::class)->except(['show']);
     Route::resource('posts', AdminPostController::class)->except(['show']);
     Route::resource('testimonials', AdminTestimonialController::class)->except(['show']);
+    Route::resource('skills', AdminSkillController::class)->except(['show']);
+    Route::resource('categories', AdminCategoryController::class)->except(['show']);
+    Route::resource('tags', AdminTagController::class)->except(['show']);
+
+    Route::get('newsletter', [AdminNewsletterController::class, 'index'])->name('newsletter.index');
+    Route::get('newsletter/export', [AdminNewsletterController::class, 'export'])->name('newsletter.export');
+    Route::patch('newsletter/{newsletter}/toggle', [AdminNewsletterController::class, 'toggle'])->name('newsletter.toggle');
+    Route::delete('newsletter/{newsletter}', [AdminNewsletterController::class, 'destroy'])->name('newsletter.destroy');
 
     Route::get('contacts', [AdminContactController::class, 'index'])->name('contacts.index');
     Route::get('contacts/{contact}', [AdminContactController::class, 'show'])->name('contacts.show');
